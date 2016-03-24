@@ -5,7 +5,7 @@ deploy:
   provider: releases
   api_key:
     secure: OT67XLQuOzGxvJi15xw+vAjzeD6jqurbB1/UhagJWjJ4ty7HDmuW2/1ZuTr6OEGs2RpWYCP2aSh2oEPPEngVLYbmchJ6LPNPyiYqgJEDGibulusjLrLN+BzxJGvC6sd8t4B2XpfoDN/bHpx17k7YL2q5FSXgFSAeHvqYcbg8R4hbWb4TBKfxd/Brq4XZqM70gTBa/gP5ACxEfTPher0gCKf3+YhS9FaLwtjyKm6rxikAlQA9TJtZST/8pmdR0WpTLoLQXkVq1xAY6fnB8gQLh6z3PSYl/qI2dwJAj9u4S7IuQkIVS6/Sv7ErV3T5b3Ldw4eJZSfjUvR4RxadgMBNud2GMgzVRbRguw9DAex3hQ/NyT4pqZrtiAHB2OCvDTaYGi3DPoNs6u/zkjATmnTw8clTbUp5U35rsp5+0GTL8uBpl+rAX1BhVvWHanKf468fWITtSKaD3xrCduvApyDOe7KxkJYE4rKMbkkPJm1tdNjJdrPzcyHPtyDkuTeUi+bDnotxwvytUlyQrzTB1J40asaH5ItpkYgVNyLBtyp/99fL4AV7m8I6tElHLzGTywFWxGvRuIZ9EiabueEdAOnrkIYuPdp4OcC7V/Q96qXkIK7Fa6D9w19W5J/wwEDW2a44Oo2TKKcDRmXK1I8s8HAgW2rVmB/xHSNqXFGiMh44V+Q=
-  file: target/kafka-clents-$TRAVIS_TAG-jar-with-dependencies.jar
+  file: target/kafka-clients-$TRAVIS_TAG-jar-with-dependencies.jar
   on:
     repo: luigiselmi/kafka-clients
     tags: true
