@@ -1,6 +1,5 @@
-Kafka Clients [![Build Status](https://travis-ci.org/luigiselmi/kafka-cleints.svg)](https://travis-ci.org/luigiselmi/kafka-clients)
+Kafka Clients [![Build Status](https://travis-ci.org/luigiselmi/kafka-cleints.svg?branch=master)](https://travis-ci.org/luigiselmi/kafka-clients)
 =====================
-
 Producer and consumer of traffic data for Apache Kafka. 
 
 ## Description
