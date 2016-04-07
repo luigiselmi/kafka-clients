@@ -25,8 +25,8 @@ The software is built from the project root folder simply running the command Ma
 The build creates a jar file with all the dependences and the configuration of the main class in the target folder. 
 To start the producer from the root folder run the command
 
-   java jar target/kafka-clients-0.0.1-SNAPSHOT-jar-with-dependencies.jar producer
-   
+    java -jar target/kafka-clients-0.0.1-SNAPSHOT-jar-with-dependencies.jar producer
+
 The producer will start to read the traffic data from the source and write it to the topic "taxy". To start the consumer simply 
 run again the same command as above passing "consumer" as argument instead of "producer".
 
