@@ -29,7 +29,12 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.5.1</version>
         </dependency>
-        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
   </dependencies>
   <build>
   <finalName>${finalName}</finalName>
@@ -63,19 +68,6 @@
          <configuration>
              <source>1.7</source>
              <target>1.7</target>
-         </configuration>
-     </plugin>
-     <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-jar-plugin</artifactId>
-         <version>2.5</version>
-         <configuration>
-             <archive>
-                 <manifest>
-                     <addClasspath>true</addClasspath>
-                     <mainClass>${main.class}</mainClass>
-                 </manifest>
-             </archive>
          </configuration>
      </plugin>
   </plugins>
