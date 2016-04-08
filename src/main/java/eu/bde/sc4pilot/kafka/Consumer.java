@@ -43,7 +43,7 @@ public class Consumer {
                 timeouts = 0;
             }
             for (ConsumerRecord<String, String> record : records) {
-                if(record.topic().equals("taxy-data")) {
+                if(record.topic().equals("taxy")) {
                         // the send time is encoded inside the message
                         /*
                 	    JsonNode msg = mapper.readTree(record.value());
