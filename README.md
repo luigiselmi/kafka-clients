@@ -17,11 +17,11 @@ Zookeeper is used to set up a cluster for fault tolerance and scalability. Befor
 as described in the documentation ([Apache Kafka Quick Start](http://kafka.apache.org/documentation.html#quickstart))
 
 1. Start Zookeeper  
-      ./bin/zookeeper-server-start.sh config/zookeeper.properties
+        ./bin/zookeeper-server-start.sh config/zookeeper.properties
 2. Start a Kafka broker (id=0, port=9090)  
-      ./bin/kafka-server-start.sh config/server.properties
+        ./bin/kafka-server-start.sh config/server.properties
 3. Create  a topic  
-      ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic taxy
+        ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic taxy
 
 The topic, "taxy" in the above example, must be the same used when a producer is started. The producer and the consumer are configured to connect to the Kafka broker
 through port 9090 in their properties files. 
