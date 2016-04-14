@@ -43,7 +43,7 @@ public class Producer {
         
         String lastRecordSet = "";
     	  int recordSetNumber = 0;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; true; i++) {
             String recordSet = getRecordsString();
             if (! lastRecordSet.equals(recordSet) ) {
               producer.send(new ProducerRecord<String, String>(
