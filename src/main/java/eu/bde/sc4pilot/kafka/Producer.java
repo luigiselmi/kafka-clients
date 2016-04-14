@@ -10,51 +10,66 @@ import java.util.Properties;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.io.Resources;
 
 public class Producer {
+  
+  private static String topic = null;
+  private static String sourceUri = null;
+  private static final Logger log = LoggerFactory.getLogger(Producer.class);
 	
 	public static void main(String[] args) throws IOException {
-        // set up the producer
-        KafkaProducer<String, String> producer;
-        try (InputStream props = Resources.getResource("producer.props").openStream()) {
-            Properties properties = new Properties();
-            properties.load(props);
-            producer = new KafkaProducer<>(properties);
-        }
-        
-        try {
-            
-            String lastRecordSet = "";
-        	  int recordSetNumber = 0;
-            for (int i = 0; i < 100; i++) {
-                String recordSet = getRecordsString();
-                if (! lastRecordSet.equals(recordSet) ) {
-                  producer.send(new ProducerRecord<String, String>(
-                        "taxy",
-                        Integer.toString(i), recordSet));
-                  producer.flush();
-                  lastRecordSet = recordSet;
-                  System.out.println("\nSent recordset number " + recordSetNumber);
-                  recordSetNumber++;
-                }
-                else {
-                  System.out.print("-");
-                }
-                Thread.sleep(30000);
-            }
-        } 
-        catch (Throwable throwable) {
-            System.out.printf("%s", throwable.getStackTrace());
-            Thread.currentThread().interrupt();
-        }
-        finally {
-            producer.close();
-            
-        }
-
+	  
+	  if (args.length < 3) {
+      throw new IllegalArgumentException("A Kafka producer needs the URI of the data source. \n"
+          + "It must be passed as third argument.");
     }
+	  
+	  topic = args[1];
+	  sourceUri = args[2];
+    
+    // set up the producer
+    KafkaProducer<String, String> producer;
+    try (InputStream props = Resources.getResource("producer.props").openStream()) {
+        Properties properties = new Properties();
+        properties.load(props);
+        producer = new KafkaProducer<>(properties);
+    }
+    
+    try {
+        
+        String lastRecordSet = "";
+    	  int recordSetNumber = 0;
+        for (int i = 0; i < 100; i++) {
+            String recordSet = getRecordsString();
+            if (! lastRecordSet.equals(recordSet) ) {
+              producer.send(new ProducerRecord<String, String>(
+                    topic,
+                    Integer.toString(i), recordSet));
+              producer.flush();
+              lastRecordSet = recordSet;
+              log.info("\nSent recordset number " + recordSetNumber);
+              recordSetNumber++;
+            }
+            else {
+              System.out.print("-");
+            }
+            Thread.sleep(30000);
+        }
+    } 
+    catch (Throwable throwable) {
+        log.error(throwable.getStackTrace().toString());
+        Thread.currentThread().interrupt();
+    }
+    finally {
+        producer.close();
+        
+    }
+
+  }
 	
 	public static String getRecordsString() {
 		String recordsString = "";
@@ -63,7 +78,7 @@ public class Producer {
 		try {
 		      
         // Connect to CERTH WS
-        URL certhUrl = new URL("http://feed.opendata.imet.gr:23577/fcd/gps.json");
+        URL certhUrl = new URL(sourceUri);
         certhConn = certhUrl.openConnection();
         certhConn.connect();
         certhIs = certhConn.getInputStream();
@@ -75,7 +90,7 @@ public class Producer {
         }
         
         recordsString = records.toString();
-        //System.out.println("data size: " + recordsString.length());
+        
           
     }
 		catch (IOException ioe) {
@@ -84,8 +99,7 @@ public class Producer {
 		finally {
       try {
         certhIs.close();
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
+      } catch (IOException e) {        
         e.printStackTrace();
       }
     }
