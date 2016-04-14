@@ -17,9 +17,9 @@ Zookeeper is used to set up a cluster for fault tolerance and scalability. Befor
 as described in the documentation ([Apache Kafka Quick Start](http://kafka.apache.org/documentation.html#quickstart))
 
 1. Start Zookeeper:  
-  
+```
     ./bin/zookeeper-server-start.sh config/zookeeper.properties
-
+```
 2. Start a Kafka broker (id=0, port=9090):    
  
     ./bin/kafka-server-start.sh config/server.properties
