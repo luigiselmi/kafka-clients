@@ -3,6 +3,7 @@
   <groupId>sc4pilot</groupId>
   <artifactId>pilot-sc4-kafka-producers</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <name>Big Data Europe - Pilot SC4 Kafka Producer</name>
   <description>
         Producer and consumer of traffic data for Kafka brokers
   </description>
