@@ -1,4 +1,4 @@
-Pilot SC4 Kafka Producer [![Build Status](https://travis-ci.org/luigiselmi/kafka-clients.svg?branch=master)](https://travis-ci.org/luigiselmi/kafka-clients)
+Pilot SC4 Kafka Producer [![Build Status](https://travis-ci.org/big-data-europe/pilot-sc4-kafka-producer.svg?branch=master)](https://travis-ci.org/big-data-europe/pilot-sc4-kafka-producer)
 =====================
 Producer and consumer of traffic data for Apache Kafka. 
 
