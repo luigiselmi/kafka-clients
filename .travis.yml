@@ -5,7 +5,8 @@ deploy:
   provider: releases
   api_key:
     secure: OTZ/kCf1tTe9yZygPWBAZlQQSS2VSnMbnXIjQw7TetT8Ypj3oLPbfxGIdzSKPl3nJ5esfaMPqURUWlLfhpM3iHjhF7lagd5bzJjxMFae4dk7ILjlmmJaQxGQZZUPT0l3jr4KbBbV+BXCFp+Bt+czGIw1WnKw1S3cOX89MDiTTozVZvvwRRyltMTf30ARMsd7vJ+R1RIMTl2T5tq+mWiyw0PjSJgY8hd2X3e/i73H7A0gpIirD7vWBXtuC75ZqRfHqzxqR20dkMWdnTXjLOc2B6x1FSDvo8ZanHoywj5mwTJmCmiq2//T29xOSTfQrAHg4moxxV83zCRucjV/xr4kD9tJHbVlf1RLMFHNqIEI7RvM8cvha4JPl1djpz4wFEwAvLHOzBVBjWkMINtbFxa7U93vUik3/hN6TV/F4d/WKpqq+XDwLl6NDIzHdopNnqIVpsu0pwWOrYF3RiUrRBm10FRhhXU01aepf3yjIMwI8tho2R0XTY7FrxTR117brpI9koxp43+auCWSYY7tw+tpvumx36IX3aI1ELpSdddLz3Bjzg08PMh5uv5Rhgr05EafxJJLNPIYyLcGn576C2D6sRYltJ9w9BpLAhn8OzGyjrVg0tljjP2B+l2sNRY2P3WiDUUvY8TYLH4QzFQYxiFVntopaozgnrs1xyR7vSPJt4o=
-  file: target/pilot-sc4-kafka-producer
+  file: target/pilot-sc4-kafka-producer-$TRAVIS_TAG-jar-with-dependencies.jar
+  skip_cleanup: true
   on:
     repo: big-data-europe/pilot-sc4-kafka-producer
     tags: true
