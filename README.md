@@ -26,9 +26,9 @@ as described in the documentation ([Apache Kafka Quick Start](http://kafka.apach
 ```
 3) Create  a topic:      
 ```
-    ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic taxy
+    ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic taxi
 ```
-The topic, "taxy" in the above example, must be the same used when a producer is started. The producer and the consumer are configured to connect to the Kafka broker
+The topic, "taxi" in the above example, must be the same used when a producer is started. The producer and the consumer are configured to connect to the Kafka broker
 through port 9090 in their properties files. 
  
 ##Build 
@@ -41,15 +41,15 @@ The build creates a jar file with all the dependences and the configuration of t
 To start the producer three arguments must be passed to the application: the type of client, producer, the topic to which
 the producer will write the data and the source URI from which it will fetch the data. As an example
 
-    java -jar target/pilot-sc4-kafka-producer-0.0.1-SNAPSHOT-jar-with-dependencies.jar producer taxy http://feed.opendata.imet.gr:23577/fcd/gps.json
+    java -jar target/pilot-sc4-kafka-producer-0.0.1-SNAPSHOT-jar-with-dependencies.jar producer taxi http://feed.opendata.imet.gr:23577/fcd/gps.json
 
-The producer will start to read the traffic data from the source and write it to the topic "taxy". To start the consumer simply 
+The producer will start to read the traffic data from the source and write it to the topic "taxi". To start the consumer simply 
 run again the same command as above passing "consumer" as argument instead of "producer" and the topic name. To stop the producer and the consumer use Ctrl+C.
 
 ##Usage 
 In order to read the data sent by the producer to a Kafka topic run the following command from the Kafka root folder to start a consumer of the topic
 
-    ./bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic taxy --from-beginning
+    ./bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic taxi --from-beginning
 
 
 ##License 
