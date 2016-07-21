@@ -7,9 +7,11 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
+import java.util.concurrent.Future;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,12 +48,12 @@ public class Producer {
         for (int i = 0; true; i++) {
             String recordSet = getRecordsString();
             if (! lastRecordSet.equals(recordSet) ) {
-              producer.send(new ProducerRecord<String, String>(
+              RecordMetadata recordMetadata = producer.send(new ProducerRecord<String, String>(
                     topic,
-                    Integer.toString(i), recordSet));
+                    Integer.toString(i), recordSet)).get();
               producer.flush();
               lastRecordSet = recordSet;
-              log.info("\nSent recordset number " + recordSetNumber);
+              log.info("\nSent recordset number " + recordSetNumber + "\nMetadata " + recordMetadata);
               recordSetNumber++;
             }
             else {
