@@ -20,7 +20,7 @@ as described in the documentation ([Apache Kafka Quick Start](http://kafka.apach
 ```
     ./bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
-2) Start a Kafka broker (id=0, port=9090):        
+2) Start a Kafka broker (id=0, port=9092):        
  ```
     ./bin/kafka-server-start.sh config/server.properties
 ```
@@ -29,7 +29,7 @@ as described in the documentation ([Apache Kafka Quick Start](http://kafka.apach
     ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic taxi
 ```
 The topic, "taxi" in the above example, must be the same used when a producer is started. The producer and the consumer are configured to connect to the Kafka broker
-through port 9090 in their properties files. 
+through port 9092 in their properties files. 
  
 ##Build 
 The software is based on Maven and can be build from the project root folder simply running the command

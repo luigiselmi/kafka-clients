@@ -1,4 +1,4 @@
-bootstrap.servers=localhost:9090
+bootstrap.servers=localhost:9092
 acks=all
 retries=0
 batch.size=16384
