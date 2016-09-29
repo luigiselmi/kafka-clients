@@ -20,34 +20,26 @@
 #
 #    $ docker run -d --name fcd-producer bde2020/pilot-sc4-fcd-producer:v0.0.1 
 #
+#
+# we start from bde2020/kafka 
+# because there all kafka command line tools and oracle java 8 are available
+# see: https://github.com/big-data-europe/docker-kafka
 
-# Pull base image
-FROM ubuntu
-MAINTAINER Luigi Selmi <luigiselmi@gmail.com>
-
-# Install Java 8.
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y  software-properties-common && \
-    add-apt-repository ppa:webupd8team/java -y && \
-    apt-get update && \
-    echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
-    apt-get install -y oracle-java8-installer && \
-    apt-get clean
-
-# Define JAVA_HOME environment variable
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+FROM bde2020/kafka
+MAINTAINER Luigi Selmi <luigiselmi@gmail.com>, Karl-Heinz Sylla <karl-heinz.sylla@iais.fraunhofer.de>
 
 # Install  network tools (ifconfig, netstat, ping, ip)
-RUN apt-get update && \
-    apt-get install -y net-tools && \
-    apt-get install -y iputils-ping && \
-    apt-get install -y iproute2
+RUN apt-get update \
+    && apt-get install -y net-tools \
+    && apt-get install -y iputils-ping \
+    && apt-get install -y iproute2
 
-# Copy the FCD producer jar file in a container folder 
-COPY target/pilot-sc4-kafka-producer-0.0.1-SNAPSHOT-jar-with-dependencies.jar /home/pilot-sc4/
-
-# Start the FCD producer
+# Put program/executable to application home
 WORKDIR /home/pilot-sc4/
-CMD java -jar target/pilot-sc4-kafka-producer-0.0.1-SNAPSHOT-jar-with-dependencies.jar producer taxi http://feed.opendata.imet.gr:23577/fcd/gps.json
+
+COPY target/pilot-sc4-kafka-producer-0.0.1-SNAPSHOT-jar-with-dependencies.jar .
+COPY pilot-sc4-kafka-producer.sh .
+
+# Run the FCD producer
+CMD [ "./pilot-sc4-kafka-producer.sh" ]
 
