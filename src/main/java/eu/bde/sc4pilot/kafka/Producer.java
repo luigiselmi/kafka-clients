@@ -59,7 +59,7 @@ public class Producer {
                 FcdTaxiEvent event = FcdTaxiEvent.fromJsonString(irecords.next());
                 RecordMetadata recordMetadata = producer.send(new ProducerRecord<String, String>(
                     topic,
-                    Integer.toString(i), 
+                    Long.toString(event.timestamp.getMillis()), 
                     event.toString())).get();
                 producer.flush();
                 lastJsonString = jsonString;
