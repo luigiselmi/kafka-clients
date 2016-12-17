@@ -1,4 +1,4 @@
-package eu.bde.sc4pilot.kafka;
+package eu.bde.pilot.sc4.nrtfcd;
 
 import java.io.IOException;
 import java.io.InputStream;

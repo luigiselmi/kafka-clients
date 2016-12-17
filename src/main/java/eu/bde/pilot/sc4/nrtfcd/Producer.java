@@ -1,6 +1,7 @@
-package eu.bde.sc4pilot.kafka;
+package eu.bde.pilot.sc4.nrtfcd;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,6 +11,10 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
+
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -21,31 +26,42 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.twitter.bijection.Injection;
+import com.twitter.bijection.avro.GenericAvroCodecs;
 
 public class Producer {
   
   private static String topic = null;
   private static String sourceUrl = null;
+  private static final String FCD_THESSALONIKI_SCHEMA = "fcd-record-schema.avsc";
   private static final Logger log = LoggerFactory.getLogger(Producer.class);
 	
 	public static void main(String[] args) throws IOException {
 	  
-	  if (args.length < 3) {
-      throw new IllegalArgumentException("A Kafka producer needs the URI of the data source. \n"
-          + "It must be passed as third argument.");
+	  if (args.length < 2) {
+      throw new IllegalArgumentException("A Kafka producer needs the URI of the data source.\n");
     }
-	  
+	 
 	  topic = args[1];
 	  sourceUrl = args[2];
     
-    // set up the producer
-    KafkaProducer<String, String> producer;
+	  // set up the producer
+    KafkaProducer<String, byte[]> producer;
     try (InputStream props = Resources.getResource("producer.props").openStream()) {
         Properties properties = new Properties();
         properties.load(props);
-        producer = new KafkaProducer<>(properties);
+        producer = new KafkaProducer<String, byte[]>(properties);
     }
     
+    // set up the schema of the messages that will be sent to a kafka topic
+    Schema schema;
+    try(InputStream schemaIs = Resources.getResource(FCD_THESSALONIKI_SCHEMA).openStream()){
+      Schema.Parser parser = new Schema.Parser();
+      schema = parser.parse(schemaIs);
+    }
+    Injection<GenericRecord, byte[]> recordInjection = GenericAvroCodecs.toBinary(schema);
+    
+      
     try {
         
         String lastJsonString = "";
@@ -56,14 +72,22 @@ public class Producer {
             if (! lastJsonString.equals(jsonString) ) {
               Iterator<String> irecords = recordsList.iterator();
               while(irecords.hasNext()) {
-                FcdTaxiEvent event = FcdTaxiEvent.fromJsonString(irecords.next());
-                RecordMetadata recordMetadata = producer.send(new ProducerRecord<String, String>(
-                    topic,
-                    Long.toString(event.timestamp.getMillis()), 
-                    event.toString())).get();
+                GenericData.Record avroRecord = new GenericData.Record(schema);
+                FcdTaxiEvent event = FcdTaxiEventUtils.fromJsonString(irecords.next());
+                avroRecord.put("device_id", event.deviceId);
+                avroRecord.put("timestamp", event.timestamp);
+                avroRecord.put("lon", event.lon);
+                avroRecord.put("lat", event.lat);
+                avroRecord.put("altitude", event.altitude);
+                avroRecord.put("speed", event.speed);
+                avroRecord.put("orientation", event.orientation);
+                avroRecord.put("transfer", event.transfer);
+                byte[] bytes = recordInjection.apply(avroRecord);
+                ProducerRecord<String, byte []> record = new ProducerRecord<>(topic, bytes);
+                producer.send(record);
                 producer.flush();
                 lastJsonString = jsonString;
-                log.info("\nSent recordset number " + recordSetNumber + "\nMetadata " + recordMetadata);
+                log.info("\nSent recordset number " + recordSetNumber + "\nMetadata ");
                 recordSetNumber++;
               }
             }
@@ -139,5 +163,5 @@ public class Producer {
     
     return recordsList;
   }
-
+	
 }

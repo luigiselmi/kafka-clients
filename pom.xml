@@ -11,7 +11,7 @@
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <maven.compiler.source>1.7</maven.compiler.source>
       <maven.compiler.target>1.7</maven.compiler.target>
-      <main.class>eu.bde.sc4pilot.kafka.Main</main.class>
+      <main.class>eu.bde.pilot.sc4.nrtfcd.Main</main.class>
       <finalName>${project.artifactId}-${project.version}</finalName>
   </properties>
   <dependencies>
@@ -56,7 +56,16 @@
           <artifactId>slf4j-simple</artifactId>
           <version>1.7.21</version>
         </dependency>
-        
+        <dependency>
+          <groupId>org.apache.avro</groupId>
+          <artifactId>avro</artifactId>
+          <version>1.8.1</version>
+        </dependency>
+        <dependency>
+          <groupId>com.twitter</groupId>
+          <artifactId>bijection-avro_2.10</artifactId>
+          <version>0.9.2</version>
+        </dependency>
   </dependencies>
   <build>
   <finalName>${finalName}</finalName>
@@ -91,6 +100,23 @@
              <source>1.7</source>
              <target>1.7</target>
          </configuration>
+     </plugin>
+     <plugin>
+		  <groupId>org.apache.avro</groupId>
+		  <artifactId>avro-maven-plugin</artifactId>
+		  <version>1.8.1</version>
+		  <executions>
+		    <execution>
+		      <phase>generate-sources</phase>
+		      <goals>
+		        <goal>schema</goal>
+		      </goals>
+		      <configuration>
+		        <sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
+		        <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+		      </configuration>
+		    </execution>
+		  </executions>
      </plugin>
   </plugins>
   </build>
