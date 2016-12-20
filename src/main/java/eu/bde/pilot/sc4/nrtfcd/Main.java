@@ -15,10 +15,10 @@ public class Main {
         }
         switch (args[0]) {
             case "producer":
-                Producer.main(args);
+                FcdProducer.main(args);
                 break;
             case "consumer":
-                Consumer.main(args);
+                FcdConsumer.main(args);
                 break;
             default:
                 throw new IllegalArgumentException("Don't know how to do " + args[0]);
