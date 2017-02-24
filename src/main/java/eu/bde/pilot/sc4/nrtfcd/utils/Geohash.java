@@ -107,7 +107,7 @@ public class Geohash {
       'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r',
       's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
-  public static final byte[] BASE32_INV = new byte[(int) 'z' + 1];
+  public static final byte[] BASE32_INV = new byte['z' + 1];
 
   static {
     // Build the inverse lookup table as an array using ASCII offsets as
@@ -115,7 +115,7 @@ public class Geohash {
     // using a hashmap or similar, since we're avoiding data structure virtual
     // methods as well as primitive type autoboxing.
     for (int i = 0; i < BASE32.length; ++i)
-      BASE32_INV[(int) BASE32[i]] = (byte) i;
+      BASE32_INV[BASE32[i]] = (byte) i;
   }
 
   /**
@@ -149,6 +149,7 @@ public class Geohash {
     public double minLat() {return lat - latError;}
     public double minLng() {return lng - lngError;}
 
+    @Override
     public String toString() {
       return "<lat: " + lat + " ±" + latError + ", "
            +  "lng: " + lng + " ±" + lngError + ", "
@@ -160,10 +161,12 @@ public class Geohash {
            + ">";
     }
 
+    @Override
     public int hashCode() {
       return (int) (bits & 0xffffffff ^ bits >> 32 ^ precision);
     }
 
+    @Override
     public boolean equals(final Object rhs) {
       return rhs instanceof Decoded
           && bits      == ((Decoded) rhs).bits
@@ -373,7 +376,7 @@ public class Geohash {
     long result = 0;
     for (int i = 0; i < base32.length(); ++i) {
       result <<= 5;
-      result |= (long) BASE32_INV[(int) base32.charAt(i)];
+      result |= BASE32_INV[base32.charAt(i)];
     }
     return result | precisionTag(base32.length() * 5);
   }
