@@ -63,16 +63,6 @@ public class FcdProducer {
         producer = new KafkaProducer<String, byte []>(properties);
     }
     
-    // Set up the schema of the messages that will be sent to a kafka topic.
-    /*
-    Schema schema;
-    try(InputStream schemaIs = Resources.getResource(FCD_THESSALONIKI_SCHEMA).openStream()){
-      Schema.Parser parser = new Schema.Parser();
-      schema = parser.parse(schemaIs);
-    }
-    Injection<GenericRecord, byte[]> recordInjection = GenericAvroCodecs.toBinary(schema);
-    */
-    
     try {
         
         String lastJsonString = "";
