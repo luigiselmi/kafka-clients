@@ -30,7 +30,12 @@ import com.twitter.bijection.Injection;
 import com.twitter.bijection.avro.GenericAvroCodecs;
 
 import eu.bde.pilot.sc4.nrtfcd.utils.Geohash;
-
+/**
+ * This class is a Kafka producer of near real-time floating car data. It fetches data from a web service
+ * and send the records in a Kafka topic using the avro binary format. 
+ * @author luigi
+ *
+ */
 public class FcdProducer {
   
   private static String topic = null;
@@ -59,35 +64,28 @@ public class FcdProducer {
     }
     
     // Set up the schema of the messages that will be sent to a kafka topic.
+    /*
     Schema schema;
     try(InputStream schemaIs = Resources.getResource(FCD_THESSALONIKI_SCHEMA).openStream()){
       Schema.Parser parser = new Schema.Parser();
       schema = parser.parse(schemaIs);
     }
     Injection<GenericRecord, byte[]> recordInjection = GenericAvroCodecs.toBinary(schema);
-      
+    */
+    
     try {
         
         String lastJsonString = "";
     	  int recordSetNumber = 0;
-        for (int i = 0; true; i++) {
+        for (int i = 0; true; i++) { //infinite loop
             String jsonString = getRecordsString();
             ArrayList<String> recordsList = getRecords(jsonString);
             if (! lastJsonString.equals(jsonString) ) {
               Iterator<String> irecords = recordsList.iterator();
               while(irecords.hasNext()) {
-                GenericData.Record avroRecord = new GenericData.Record(schema);
                 FcdTaxiEvent event = FcdTaxiEventUtils.fromJsonString(irecords.next());
-                avroRecord.put("device_id", event.deviceId);
-                avroRecord.put("timestamp", event.timestamp);
-                avroRecord.put("lon", event.lon);
-                avroRecord.put("lat", event.lat);
-                avroRecord.put("altitude", event.altitude);
-                avroRecord.put("speed", event.speed);
-                avroRecord.put("orientation", event.orientation);
-                avroRecord.put("transfer", event.transfer);
-                byte[] value = recordInjection.apply(avroRecord);
-                Long timestamp = timeFormatter.parseDateTime(event.timestamp).getMillis();
+                byte[] value = event.toBinary();
+                Long timestamp = event.timestamp.getMillis();
                 String key = Geohash.encodeBase32(event.lat, event.lon, 20); // bits = 20 -> precision 4
                 ProducerRecord<String, byte []> record = new ProducerRecord<String, byte []>(topic, key, value);
                 RecordMetadata metadata = producer.send(record).get();
@@ -113,7 +111,10 @@ public class FcdProducer {
     }
 
   }
-	
+	/*
+	 * This method connects to the web service and fetch the data as a set of JSON records
+	 * in a string
+	 */
 	public static String getRecordsString() {
 		String recordsString = "";
 		URLConnection conn = null;
