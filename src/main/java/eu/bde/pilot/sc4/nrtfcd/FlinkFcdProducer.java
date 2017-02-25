@@ -24,7 +24,7 @@ import eu.bde.pilot.sc4.nrtfcd.NrtFcdTaxiSource;
  * @author Luigi Selmi
  *
  */
-public class FcdFlinkProducer {
+public class FlinkFcdProducer {
   
   private static String topic = null;
   private static String sourceUrl = null;
