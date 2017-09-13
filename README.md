@@ -31,12 +31,12 @@ as described in the documentation ([Apache Kafka Quick Start](http://kafka.apach
 The topic, "taxi" in the above example, must be the same used when a producer is started. The producer and the consumer are configured to connect to the Kafka broker
 through port 9092 in their properties files. 
  
-##Build 
+## Build 
 The software is based on Maven and can be build from the project root folder simply running the command
 
     mvn install
 
-##Install and Run 
+## Install and Run 
 The build creates a jar file with all the dependences and the configuration of the main class in the target folder. 
 To start the producer three arguments must be passed to the application: the type of client, producer, the topic to which
 the producer will write the data and the source URI from which it will fetch the data. As an example
@@ -46,11 +46,11 @@ the producer will write the data and the source URI from which it will fetch the
 The producer will start to read the traffic data from the source and write it to the topic "taxi". To start the consumer simply 
 run again the same command as above passing "consumer" as argument instead of "producer" and the topic name. To stop the producer and the consumer use Ctrl+C.
 
-##Usage 
+## Usage 
 In order to read the data sent by the producer to a Kafka topic run the following command from the Kafka root folder to start a consumer of the topic
 
     $ ./bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic taxi --from-beginning
 
 
-##License 
+## License 
 TBD 
