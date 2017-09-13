@@ -6,12 +6,12 @@ Producer and consumer of traffic data for Apache Kafka.
 The project creates a producer and a consumer of a Kafka topic. The producer fetches data from a source and sends the data 
 to the topic. A consumer is able to read and parse the data from the topic for processing and storage.
 
-##Documentation 
+## Documentation 
 This project is a component of the pilot that address the 4th H2020 societal challenge: Smart Green and Integrated Transport. 
 The pilot will provide a scalable and fault tolerant system to collect, process and store the data from sensors: GPS data from 
 cabs and data from Bluetooth sensors all in the city of Thessaloniki, Greece.
 
-##Requirements 
+## Requirements 
 A producer fetches data from a source and writes the data to a Kafka topic, while a consumer listen to a topic. They both depend on Kafka broker that manages the topics. 
 Zookeeper is used to set up a cluster for fault tolerance and scalability. Before running a producer the following components must be run from the root folder of an Apache kafka release
 as described in the documentation ([Apache Kafka Quick Start](http://kafka.apache.org/documentation.html#quickstart))
