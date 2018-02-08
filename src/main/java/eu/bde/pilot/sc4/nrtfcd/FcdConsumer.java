@@ -30,7 +30,7 @@ public class FcdConsumer {
       throw new IllegalArgumentException("A Kafka consumer needs the name of the topic where to read the data.\n");
     }
 	  
-	  topic = args[0];
+	  topic = args[1];
 	  
     // set up house-keeping
     ObjectMapper mapper = new ObjectMapper();
@@ -42,6 +42,7 @@ public class FcdConsumer {
         properties.load(props);
         consumer = new KafkaConsumer<>(properties);
     }
+    
     consumer.subscribe(Arrays.asList(topic));
     
     
