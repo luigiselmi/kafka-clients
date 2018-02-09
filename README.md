@@ -8,7 +8,7 @@ to the topic. A consumer reads and parse the data from the topic for processing 
 
 ## Documentation 
 This project is a component of the pilot that address the 4th H2020 societal challenge: Smart Green and Integrated Transport. 
-The pilot will provide a scalable and fault tolerant system to collect, process and store the data from taxis equipped with GPS devices from the city of Thessaloniki, Greece.
+The pilot will provide a scalable and fault tolerant system to collect, process and store the data from taxis equipped with GPS devices from the city of Thessaloniki, Greece. The data is provided by the Hellenic Institute of Transport through its [open data portal](http://opendata.imet.gr/dataset/fcd-gps).
 
 ## Requirements 
 A producer harvests data from a source and writes the data to a Kafka topic in event time, while a consumer listen to a topic. They both depend on Kafka broker that manages the topics. 
