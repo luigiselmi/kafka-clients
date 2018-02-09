@@ -26,7 +26,7 @@ public class FcdConsumer {
 	
 	public static void main(String[] args) throws IOException {
 	  
-	  if (args.length < 1) {
+	  if (args.length < 2) {
       throw new IllegalArgumentException("A Kafka consumer needs the name of the topic where to read the data.\n");
     }
 	  

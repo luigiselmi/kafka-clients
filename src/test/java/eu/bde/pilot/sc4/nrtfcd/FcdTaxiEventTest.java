@@ -57,14 +57,14 @@ public class FcdTaxiEventTest {
   public void testFromJsonString() throws IOException {
     
     FcdTaxiEvent event = FcdTaxiEvent.fromJsonString(jsonRecord);
-    assertTrue(event.deviceId == 79163);
+    assertTrue(event.speed == 25);
     
   }
   
   @Test
   public void testFromString() {
     FcdTaxiEvent event = FcdTaxiEvent.fromString(csvRecord);
-    assertTrue(event.deviceId == 84037);
+    assertTrue(event.speed == 41.0);
   }
 
 

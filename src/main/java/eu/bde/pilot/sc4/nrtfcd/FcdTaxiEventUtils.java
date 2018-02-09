@@ -24,12 +24,14 @@ public class FcdTaxiEventUtils {
     JsonParser parser = new JsonParser();
     JsonElement element = parser.parse(jsonString);
     JsonObject jsonRecord = element.getAsJsonObject();
+    /*
     if( jsonRecord.get("device_random_id").getAsString().equals("")){
       return null;
     }
     else {
       event.deviceId = jsonRecord.get("device_random_id").getAsInt();  
     }
+    */
     String timestamp = jsonRecord.get("recorded_timestamp").getAsString();
     event.timestamp = DateTime.parse(timestamp, timeFormatter);
     event.lon = jsonRecord.get("lon").getAsDouble();
@@ -37,7 +39,7 @@ public class FcdTaxiEventUtils {
     event.altitude = jsonRecord.get("altitude").getAsDouble();
     event.speed = jsonRecord.get("speed").getAsInt();
     event.orientation = jsonRecord.get("orientation").getAsDouble();
-    event.transfer = jsonRecord.get("transfer").getAsInt();
+    //event.transfer = jsonRecord.get("transfer").getAsInt();
     return event;
   }
   /*

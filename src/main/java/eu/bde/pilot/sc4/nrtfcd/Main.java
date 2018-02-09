@@ -8,10 +8,9 @@ import java.io.IOException;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        if (args.length < 3) {
+        if (args.length < 2) {
             throw new IllegalArgumentException("Must have either 'producer' or 'consumer' as 1st argument \n"
-                + "a Kafka topic as 2nd argument."
-                + "A producer needs the source URI as 3rd argument. \n");
+                + "a Kafka topic as 2nd argument.\n");
         }
         switch (args[0]) {
             case "producer":

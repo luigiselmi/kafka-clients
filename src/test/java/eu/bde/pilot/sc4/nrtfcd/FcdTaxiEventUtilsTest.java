@@ -35,7 +35,7 @@ public class FcdTaxiEventUtilsTest {
     ArrayList<String> jsonRecords = FcdTaxiEventUtils.getJsonRecords(jsonStringRecords);
     String json = jsonRecords.get(0);
     FcdTaxiEvent event = FcdTaxiEventUtils.fromJsonString(json);
-    assertTrue(event.deviceId == 79163);
+    assertTrue(event.speed == 25);
   }
   
   @Test
