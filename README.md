@@ -15,21 +15,21 @@ A producer harvests data from a source and writes the data to a Kafka topic in e
 Zookeeper is used to set up a cluster for fault tolerance and scalability. Before running a producer the following components must be run from the root folder of an Apache kafka release
 as described in the documentation ([Apache Kafka Quick Start](http://kafka.apache.org/documentation.html#quickstart))
 
-1) Start Zookeeper:    
+Start Zookeeper:    
 
-    $ ./bin/zookeeper-server-start.sh config/zookeeper.properties
+    $ bin/zookeeper-server-start.sh config/zookeeper.properties
 
-2) Start a Kafka broker (id=0, port=9092):        
+Start a Kafka broker (id=0, port=9092):        
 
-    $ ./bin/kafka-server-start.sh config/server.properties
+    $ bin/kafka-server-start.sh config/server.properties
 
-3) Create  a topic. Check if the topic has been already created
+Create  a topic. Check if the topic has been already created
 
     $ bin/kafka-topics.sh --list --zookeeper localhost:2181
     
-in case the topic doesn't already exist create one, e.g. "taxi"      
+In case the topic doesn't already exist create one, e.g. "taxi"      
 
-    $ ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic taxi
+    $ bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic taxi
 
 The topic, "taxi" in the above example, must be the same used when a producer is started. The producer and the consumer are configured to connect to the Kafka broker
 through port 9092 in their properties files. 
