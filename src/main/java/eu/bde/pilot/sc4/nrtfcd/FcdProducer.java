@@ -39,7 +39,7 @@ public class FcdProducer {
   private static transient DateTimeFormatter timeFormatter =
       DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
 	
-	public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException {
 	  
 	  if (args.length < 2) {
       throw new IllegalArgumentException("A Kafka producer needs the URI of the data source.\n");
@@ -59,35 +59,39 @@ public class FcdProducer {
     
     try {
         
-        String lastJsonString = "";
-    	  int recordSetNumber = 0;
-        for (int i = 0; true; i++) { //infinite loop
-            String jsonString = getRecordsString();
-            ArrayList<String> recordsList = getRecords(jsonString);
-            if (! lastJsonString.equals(jsonString) ) {
-              Iterator<String> irecords = recordsList.iterator();
-              while(irecords.hasNext()) {
-                FcdTaxiEvent event = FcdTaxiEventUtils.fromJsonString(irecords.next());
-                byte[] value = event.toBinary();
-                Long timestamp = event.timestamp.getMillis();
-                String key = Geohash.encodeBase32(event.lat, event.lon, 20); // bits = 20 -> precision 4
-                ProducerRecord<String, byte []> record = new ProducerRecord<String, byte []>(topic, key, value);
-                RecordMetadata metadata = producer.send(record).get();
-                producer.flush();
-                lastJsonString = jsonString;
-                log.info("\nSent recordset number " + recordSetNumber + " timestamp: " + timestamp);
-                recordSetNumber++;
-              }
-            }
-            else {
-              System.out.print("-");
-            }
-            Thread.sleep(30000);
-        }
+      String lastJsonString = "";
+      int recordSetNumber = 0;
+      String jsonString = "";
+      for (int i = 0; true; i++) { //infinite loop
+         jsonString = getRecordsString();
+         if(jsonString != null && ! "".equals(jsonString) && jsonString.startsWith("[{")) {
+           ArrayList<String> recordsList = getRecords(jsonString);
+           if (! lastJsonString.equals(jsonString) ) {
+             Iterator<String> irecords = recordsList.iterator();
+             while(irecords.hasNext()) {
+               FcdTaxiEvent event = FcdTaxiEventUtils.fromJsonString(irecords.next());
+               byte[] value = event.toBinary();
+               Long timestamp = event.timestamp.getMillis();
+               String key = Geohash.encodeBase32(event.lat, event.lon, 20); // bits = 20 -> precision 4
+               ProducerRecord<String, byte []> record = new ProducerRecord<String, byte []>(topic, key, value);
+               RecordMetadata metadata = producer.send(record).get();
+               producer.flush();
+               lastJsonString = jsonString;
+               log.info("\nSent recordset number " + recordSetNumber + " timestamp: " + timestamp);
+               recordSetNumber++;
+             }
+           }
+           else {
+              System.out.print("-\n");
+           }
+          
+           Thread.sleep(30000); //wait for the new data to be available
+         }
+      }
     } 
     catch (Throwable throwable) {
         log.error(throwable.getStackTrace().toString());
-        Thread.currentThread().interrupt();
+        //Thread.currentThread().interrupt();
     }
     finally {
         producer.close();
@@ -100,40 +104,41 @@ public class FcdProducer {
 	 * in a string
 	 */
 	public static String getRecordsString() {
-		String recordsString = "";
-		URLConnection conn = null;
-    InputStream is = null;
-		try {
+	  String recordsString = null;
+	  URLConnection conn = null;
+	  InputStream is = null;
+	  try {
 		      
-      // Connect to CERTH WS
-      URL url = new URL(sourceUrl);
-      conn = url.openConnection();
-     
-      conn.connect();
-      is = conn.getInputStream();
-      BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-      String inputLine;
-      StringBuffer records = new StringBuffer();
-      while ( (inputLine = reader.readLine()) != null ) {
-      	records.append(inputLine);
-      }
-      
-      recordsString = records.toString();
-          
-    }
-		catch (IOException ioe) {
-      ioe.printStackTrace();
-    }
-		finally {
-      try {
-        is.close();
-      } catch (IOException e) {        
-        e.printStackTrace();
-      }
-    }
+		  // Connect to CERTH WS
+		  URL url = new URL(sourceUrl);
+		  conn = url.openConnection();
+		 
+		  conn.connect();
+		  is = conn.getInputStream();
+		  BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		  String inputLine;
+		  StringBuffer records = new StringBuffer();
+		  while ( (inputLine = reader.readLine()) != null ) {
+		  	records.append(inputLine);
+		  }
+		  
+		  recordsString = records.toString();
+	      
+		}
+			catch (IOException ioe) {
+		  System.err.println(ioe.getMessage());
+		}
+	    finally {
+		  try {
+		    is.close();
+		  } catch (IOException e) {        
+		    System.err.println(e.getMessage());
+		  }
+		}
 	
 		return recordsString;
 	}
+	
 	/**
 	 * Parse a string of json data and create a list of record strings
 	 * @param jsonString
@@ -148,6 +153,7 @@ public class FcdProducer {
       for (int i = 0; i < jsonRecords.size(); i++) {   
         JsonObject jsonRecord = jsonRecords.get(i).getAsJsonObject();
         String recordString = jsonRecord.toString();
+        //System.out.println(recordString);
         recordsList.add(recordString);
       }
     }
