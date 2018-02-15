@@ -1,4 +1,4 @@
-package eu.bde.sc4pilot.kafka;
+package eu.bde.pilot.sc4.nrtfcd;
 
 import java.io.IOException;
 
@@ -9,16 +9,15 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
-            throw new IllegalArgumentException("Must have either 'producer' or 'consumer' as first argument \n"
-                + "a Kafka topic as second argument, and a source URI as third argument for a producer. \n"
-                + "A consumer of a Kafka topic will send the send to the console.");
+            throw new IllegalArgumentException("Must have either 'producer' or 'consumer' as 1st argument \n"
+                + "a Kafka topic as 2nd argument.\n");
         }
         switch (args[0]) {
             case "producer":
-                Producer.main(args);
+                FcdProducer.main(args);
                 break;
             case "consumer":
-                Consumer.main(args);
+                FcdConsumer.main(args);
                 break;
             default:
                 throw new IllegalArgumentException("Don't know how to do " + args[0]);

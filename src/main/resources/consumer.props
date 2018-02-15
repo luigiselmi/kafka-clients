@@ -1,8 +1,8 @@
-bootstrap.servers=localhost:9090
-group.id=test
+bootstrap.servers=localhost:9092
+group.id=None
 enable.auto.commit=true
 key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
-value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+value.deserializer=org.apache.kafka.common.serialization.ByteArrayDeserializer
 
 # fast session timeout makes it more fun to play with failover
 session.timeout.ms=10000
