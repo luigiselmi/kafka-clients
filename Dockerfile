@@ -6,7 +6,7 @@
 #
 # 2) Test the Kafka producer for the FCD data  in a container. Run the following docker command for testing
 #
-#    $ docker run --add-host=kafkahost:172.17.0.1 --rm -it --name fcd-producer bde2020/pilot-sc4-fcd-producer:v0.1.0 /bin/bash
+#    $ docker run --add-host=kafkahost:172.17.0.1 -it --name fcd-producer -e ZOOKEEPER_SERVERS=kafkahost --rm bde2020/pilot-sc4-fcd-producer:v0.1.0 /bin/bash
 #
 #    The option --add-host tells docker to add kafkahost to /etc/hosts file so that the host name used in producer.props file
 #    in the bootstrap.servers=kafkahost:9092 can be resolved. This configuration works when the producer is run within a docker
@@ -40,5 +40,5 @@ COPY target/pilot-sc4-kafka-producer-0.1.0-SNAPSHOT-jar-with-dependencies.jar .
 COPY pilot-sc4-kafka-producer.sh .
 
 # Run the FCD producer
-CMD [ "./pilot-sc4-kafka-producer.sh" ]
+#CMD [ "./pilot-sc4-kafka-producer.sh" ]
 
