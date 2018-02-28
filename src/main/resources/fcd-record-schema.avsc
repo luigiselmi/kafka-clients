@@ -8,7 +8,6 @@
      {"name": "lat", "type": "double"},
      {"name": "altitude", "type": "double"},
      {"name": "speed", "type": "double"},
-     {"name": "orientation", "type": "double"},
-     {"name": "transfer", "type": "int"}
+     {"name": "orientation", "type": "double"}
  ]
 }
