@@ -31,9 +31,6 @@ public class FcdConsumer {
     }
 	  
 	  topic = args[1];
-	  
-    // set up house-keeping
-    ObjectMapper mapper = new ObjectMapper();
     
     // Set up the consumer
     KafkaConsumer<String, byte []> consumer;
@@ -45,53 +42,55 @@ public class FcdConsumer {
     
     consumer.subscribe(Arrays.asList(topic));
     
-    
-    // Set up the schema of the messages that will be read from a kafka topic.
-    Schema schema;
     try(InputStream schemaIs = Resources.getResource(FcdProducer.FCD_THESSALONIKI_SCHEMA).openStream()){
+      // Reads the schema of the messages that will be fetched from a kafka topic.
       Schema.Parser parser = new Schema.Parser();
-      schema = parser.parse(schemaIs);
-    }
-    //Injection<GenericRecord, byte[]> recordInjection = GenericAvroCodecs.toBinary(schema);
-    GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<GenericRecord>(schema);
+      Schema schema = parser.parse(schemaIs);
     
+      GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<GenericRecord>(schema);
     
-    int timeouts = 0;
-    //noinspection InfiniteLoopStatement
-    while (true) {
+      int timeouts = 0;
+      //noinspection InfiniteLoopStatement
+      while (true) {
         // read records with a short timeout. If we time out, we don't really care.
         ConsumerRecords<String, byte []> records = consumer.poll(100);
+        
         if (records.count() == 0) {
             timeouts++;
         } else {
             System.out.printf("Got %d records after %d timeouts\n", records.count(), timeouts);
             timeouts = 0;
         }
+        
         for (ConsumerRecord<String, byte []> record : records) {
-            if(record.topic().equals(topic)) {
-              String key = record.key();
-              ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(record.value());
-              Decoder decoder = DecoderFactory.get().binaryDecoder(byteArrayInputStream, null);
-              GenericRecord recordMessage = datumReader.read(null, decoder);
-            	int deviceId = (int) recordMessage.get("device_id");
-            	String timestamp = recordMessage.get("timestamp").toString();
-            	double lon = (double) recordMessage.get("lon");
-            	double lat = (double) recordMessage.get("lat");
-            	double altitude = (double) recordMessage.get("altitude");
-            	double speed = (double) recordMessage.get("speed");
-            	double orientation = (double) recordMessage.get("orientation");
-            	int transfer = (int) recordMessage.get("transfer");
-            	log.info("key: " + key + "\n device_id: " + deviceId + "\n timestamp: " + timestamp + "\n longitude: " 
-            	  + lon + "\n latitude: " + lat + "\n speed: " + speed);
+          if(record.topic().equals(topic)) {
+            String key = record.key();
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(record.value());
+            Decoder decoder = DecoderFactory.get().binaryDecoder(byteArrayInputStream, null);
+            GenericRecord recordMessage = datumReader.read(null, decoder);
+            int deviceId = (int) recordMessage.get("device_id");
+            String timestamp = recordMessage.get("timestamp").toString();
+            double lon = (double) recordMessage.get("lon");
+            double lat = (double) recordMessage.get("lat");
+            double altitude = (double) recordMessage.get("altitude");
+            double speed = (double) recordMessage.get("speed");
+            double orientation = (double) recordMessage.get("orientation");
+            log.info("key: " + key + "\n device_id: " + 
+            	     deviceId + "\n timestamp: " + timestamp + "\n longitude: " + 
+            	     lon + "\n latitude: " + lat + "\n speed: " + speed +
+            	     "\n altitude: " + altitude + "\n orientation: " + orientation);
             }
             else {
-                    throw new IllegalStateException("Shouldn't be possible to get message on topic " + record.topic());
+              throw new IllegalStateException("Something went wrong when reading the message from topic " + record.topic());
             }
         }
       
-      
+      }
+    } 
+    finally {
+     consumer.close(); 
     }
-}
+  }
 
 
 }
