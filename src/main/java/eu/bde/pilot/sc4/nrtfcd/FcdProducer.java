@@ -69,15 +69,15 @@ public class FcdProducer {
            if (! lastJsonString.equals(jsonString) ) {
              Iterator<String> irecords = recordsList.iterator();
              while(irecords.hasNext()) {
-               FcdTaxiEvent event = FcdTaxiEventUtils.fromJsonString(irecords.next());
-               byte[] value = event.toBinary();
+               FcdTaxiEvent event = FcdTaxiEventBuilder.fromJsonString(irecords.next());
+               byte[] value = FcdTaxiEventBuilder.toBinary(event);
                Long timestamp = event.timestamp.getMillis();
                String key = Geohash.encodeBase32(event.lat, event.lon, 20); // bits = 20 -> precision 4
                ProducerRecord<String, byte []> record = new ProducerRecord<String, byte []>(topic, key, value);
                RecordMetadata metadata = producer.send(record).get();
                producer.flush();
                lastJsonString = jsonString;
-               log.info("\nSent recordset number " + recordSetNumber + " timestamp: " + timestamp);
+               log.info("\nSent recordset number " + recordSetNumber + " timestamp: " + event.getTimestamp());
                recordSetNumber++;
              }
            }

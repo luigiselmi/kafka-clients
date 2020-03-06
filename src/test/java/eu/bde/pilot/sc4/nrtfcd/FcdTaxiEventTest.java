@@ -35,7 +35,7 @@ public class FcdTaxiEventTest {
       records.append(jsonLine);
     }
     String jsonStringRecords = records.toString();
-    ArrayList<String> jsonRecords = FcdTaxiEventUtils.getJsonRecords(jsonStringRecords);
+    ArrayList<String> jsonRecords = FcdTaxiEventBuilder.getJsonRecords(jsonStringRecords);
     return jsonRecords.get(0);
   }
   /*
@@ -56,23 +56,23 @@ public class FcdTaxiEventTest {
   @Test
   public void testFromJsonString() throws IOException {
     
-    FcdTaxiEvent event = FcdTaxiEvent.fromJsonString(jsonRecord);
+    FcdTaxiEvent event = FcdTaxiEventBuilder.fromJsonString(jsonRecord);
     assertTrue(event.speed == 25);
     
   }
   
   @Test
   public void testFromString() {
-    FcdTaxiEvent event = FcdTaxiEvent.fromString(csvRecord);
+    FcdTaxiEvent event = FcdTaxiEventBuilder.fromString(csvRecord);
     assertTrue(event.speed == 41.0);
   }
 
 
   @Test
   public void testFromBinary() throws IOException {
-    FcdTaxiEvent event = FcdTaxiEventUtils.fromJsonString(jsonRecord);
-    byte [] avro = event.toBinary();
-    FcdTaxiEvent copy = FcdTaxiEvent.fromBinary(avro);
+    FcdTaxiEvent event = FcdTaxiEventBuilder.fromJsonString(jsonRecord);
+    byte [] avro = FcdTaxiEventBuilder.toBinary(event);
+    FcdTaxiEvent copy = FcdTaxiEventBuilder.fromBinary(avro);
     assertTrue(copy.equals(event));
     
   }
