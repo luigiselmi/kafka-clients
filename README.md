@@ -54,7 +54,7 @@ run again the same command as above passing "consumer" as argument instead of "p
 ## Usage 
 In order to read the data sent by the producer to a Kafka topic run the following command from the Kafka root folder to start a consumer of the topic
 
-    $ ./bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic taxi --from-beginning
+    $ ./bin/kafka-console-consumer.sh --topic taxi --from-beginning --bootstrap-server localhost:9092
 
 
 ## License 
