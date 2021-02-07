@@ -57,5 +57,15 @@ In order to read the data sent by the producer to a Kafka topic run the followin
     $ ./bin/kafka-console-consumer.sh --topic taxi --from-beginning --bootstrap-server localhost:9092
 
 
-## License 
-TBD 
+## Docker image
+Build an image using this docker file. Run the following docker command
+
+    $ docker build -t lgslm/fcd-producer:v1.0.0 .
+
+Test the Kafka producer for the FCD data  in a container. Run the following docker command for testing
+
+    $ docker run --rm -it --network=pilot-sc4-net --name fcd-producer --env ZOOKEEPER_SERVERS=zookeeper:2181 lgslm/fcd-producer:v1.0.0 bash
+
+The option --network tells docker to add this container to the same network where Kafka is available so that the host name used in producer.props file 
+in the bootstrap.servers=kafka:9092 can be resolved. The environment variable ZOOKEEPER_SERVERS tells the container the name of the Zookeeper server that 
+will be used by a Kafka script to figure out whether the topic has been created and is available. 
