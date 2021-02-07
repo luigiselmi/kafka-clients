@@ -47,5 +47,5 @@ COPY target/fcd-producer-1.0.0-jar-with-dependencies.jar .
 COPY start-producer.sh .
 
 # Run the FCD producer
-#CMD [ "./start-producer.sh" ]
+ENTRYPOINT [ "./start-producer.sh" ]
 
