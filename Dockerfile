@@ -6,7 +6,7 @@
 #
 # 2) Test the Kafka producer for the FCD data  in a container. Run the following docker command for testing
 #
-#    $ docker run --rm -it --network=pilot-sc4-net --name fcd-producer lgslm/fcd-producer:v1.0.0 bash
+#    $ docker run --rm -it --network=pilot-sc4-net --name fcd-producer --env ZOOKEEPER_SERVERS=zookeeper:2181 lgslm/fcd-producer:v1.0.0 bash
 #
 #    The option --network tells docker to add this container to the same network where Kafka is available so that the host name 
 #    used in producer.props file in the bootstrap.servers=kafka:9092 can be resolved. 
@@ -30,6 +30,15 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get install -y vim
 
+# Install Apache Kafka (we use a script to check the topics availability)
+COPY kafka_2.13-2.7.0.tgz /usr/local/kafka_2.13-2.7.0.tgz
+WORKDIR /usr/local/
+RUN tar xvf kafka_2.13-2.7.0.tgz
+RUN rm kafka_2.13-2.7.0.tgz
+ENV KAFKA_HOME=/usr/local/kafka_2.13-2.7.0
+
+# Create a simbolic link to Kafka
+RUN ln -s $KAFKA_HOME /kafka
 
 # Move to project folder
 WORKDIR /home/pilot-sc4/
