@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>sc4pilot</groupId>
-  <artifactId>pilot-sc4-kafka-producer</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>fcd-producer</artifactId>
+  <version>1.0.0</version>
   <name>Big Data Europe - Pilot SC4 Kafka Producer</name>
   <description>
         Producer and consumer of traffic data for Kafka brokers
