@@ -1,6 +1,6 @@
 #!/bin/bash
 
-until /app/bin/kafka-topics.sh --zookeeper $ZOOKEEPER_SERVERS --list | fgrep -q taxi ;do
+until /kafka/bin/kafka-topics.sh --zookeeper $ZOOKEEPER_SERVERS --list | fgrep -q taxi ;do
     >&2 echo "XXX $0 topic taxi is unavailable - waiting"
     sleep 1
 done
