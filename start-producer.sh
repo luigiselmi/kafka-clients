@@ -6,4 +6,4 @@ until /app/bin/kafka-topics.sh --zookeeper $ZOOKEEPER_SERVERS --list | fgrep -q 
 done
 echo XXX $0 OK topic taxi is available
 
-java -jar pilot-sc4-kafka-producer-0.0.1-SNAPSHOT-jar-with-dependencies.jar producer taxi http://feed.opendata.imet.gr:23577/fcd/gps.json
+java -jar fcd-producer-1.0.0-jar-with-dependencies.jar producer taxi http://feed.opendata.imet.gr:23577/fcd/gps.json
