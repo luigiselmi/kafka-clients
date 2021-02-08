@@ -60,7 +60,7 @@ Build an image using this docker file. Run the following docker command
     $ docker build -t lgslm/fcd-producer:v1.0.0 .
 
 The application consists of a producer container and a consumer container. Both containers need to connect to a Kafka topic so Kafka must be available and the topic
-already created. Use the [docker-kafka](https://github.com/luigiselmi/docker-kafka) to build an image with Kafka (with Zookeeper) and create the topic used by the 
+already created. Use the [docker-kafka](https://github.com/luigiselmi/docker-kafka) project to build an image with Kafka (with Zookeeper) and create the topic used by the 
 producer and the consumer. A docker-compose file is also available to start all the services. The image is also available on [DockerHub](https://hub.docker.com/repository/docker/lgslm/kafka).
  
 ### Consumer container
