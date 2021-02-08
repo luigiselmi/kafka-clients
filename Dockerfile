@@ -37,10 +37,11 @@ RUN apt-get update && \
     apt-get install -y vim
 
 # Install Apache Kafka (we use a script to check the topics availability)
-COPY kafka_2.13-2.7.0.tgz /usr/local/kafka_2.13-2.7.0.tgz
 WORKDIR /usr/local/
-RUN tar xvf kafka_2.13-2.7.0.tgz
-RUN rm kafka_2.13-2.7.0.tgz
+RUN wget https://mirror.efect.ro/apache/kafka/2.7.0/kafka_2.13-2.7.0.tgz && \ 
+    tar xvf kafka_2.13-2.7.0.tgz && \
+    rm kafka_2.13-2.7.0.tgz
+
 ENV KAFKA_HOME=/usr/local/kafka_2.13-2.7.0
 
 # Create a simbolic link to Kafka
