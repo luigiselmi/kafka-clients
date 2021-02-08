@@ -7,13 +7,14 @@ The project creates a producer and a consumer of a Kafka topic. The producer har
 to the topic. A consumer reads and parse the data from the topic for processing and storage.
 
 ## Documentation 
-This project is a component of the pilot that address the 4th H2020 societal challenge: Smart Green and Integrated Transport. 
-The pilot will provide a scalable and fault tolerant system to collect, process and store the data from taxis equipped with GPS devices from the city of Thessaloniki, Greece. The data is provided by the Hellenic Institute of Transport through its [open data portal](http://opendata.imet.gr/dataset/fcd-gps).
+This project started as one pilot of the [Big Data Europe](https://www.big-data-europe.eu/) project whose aim was to address the 4th H2020 societal challenge: Smart Green 
+and Integrated Transport. The pilot's architecture has been designed to be a scalable and fault tolerant system to collect, process and store the data from taxis equipped 
+with GPS devices from the city of Thessaloniki, Greece. The data is provided by the Hellenic Institute of Transport through its [open data portal](http://opendata.imet.gr/dataset/fcd-gps).
 
 ## Requirements 
-A producer harvests data from a source and writes the data to a Kafka topic in event time, while a consumer listen to a topic. They both depend on Kafka broker that manages the topics. 
-Zookeeper is used to set up a cluster for fault tolerance and scalability. Before running a producer the following components must be run from the root folder of an Apache kafka release
-as described in the documentation ([Apache Kafka Quick Start](http://kafka.apache.org/documentation.html#quickstart))
+A producer harvests data from a web service and writes the data to a Kafka topic in event time, while a consumer listen to the same topic. They both depend on Kafka broker 
+that manages the topic. Zookeeper is used by Kafka and its topics producers and consumers as a name registry for the topics. Before running a producer the following components 
+must be run from the root folder of an Apache kafka release as described in the documentation ([Apache Kafka Quick Start](http://kafka.apache.org/documentation.html#quickstart))
 
 Start Zookeeper:    
 
