@@ -6,12 +6,16 @@
 #
 # 2) Test the Kafka producer for the FCD data  in a container. Run the following docker command for testing
 #
-#    $ docker run --rm -it --network=pilot-sc4-net --name fcd-producer --env ZOOKEEPER_SERVERS=zookeeper:2181 lgslm/fcd-producer:v1.0.0 bash
+#    $ docker run --rm -it --network=pilot-sc4-net --name fcd-producer --env ZOOKEEPER_SERVERS=zookeeper:2181 --env KAFKA_CLIENT_TYPE=producer lgslm/fcd-producer:v1.0.0 bash
 #
 #    The option --network tells docker to add this container to the same network where Kafka is available so that the host name 
 #    used in producer.props file in the bootstrap.servers=kafka:9092 can be resolved. 
 #    The environment variable ZOOKEEPER_SERVERS tells the container the name of the Zookeeper server that will be used by a Kafka script
 #    to figure out whether the topic has been created and is available.
+#    To start a consumer, start a new container e.g. call it fcd-consumer  and the the Kafka client type to consumer
+#
+#    $ docker run --rm -it --network=pilot-sc4-net --name fcd-consumer --env ZOOKEEPER_SERVERS=zookeeper:2181 --env KAFKA_CLIENT_TYPE=consumer lgslm/fcd-producer:v1.0.0 bash
+#
 #    The Kafka broker, to which the producers send the data, must be configured in the server.properties file to listen to the
 #    host network address assigned to it by docker, that is docker0 (not eth0). As an example if docker binds the network docker0
 #    to the address 172.17.0.1 then in the server.properties file used to start a broker the listeners property must be set to
