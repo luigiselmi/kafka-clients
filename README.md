@@ -61,7 +61,7 @@ Build an image using this docker file. Run the following docker command
 
 The application consists of a producer container and a consumer container. Both containers need to connect to a Kafka topic so Kafka must be available and the topic
 already created. Used the [docker-kafka](https://github.com/luigiselmi/docker-kafka) to build an image with Kafka (with Zookeeper) and create the topic used by the 
-producer and the consumer. The same image is also available on [DockerHub](https://hub.docker.com/repository/docker/lgslm/fcd-producer).
+producer and the consumer. The same image is also available on [DockerHub](https://hub.docker.com/repository/docker/lgslm/kafka).
  
 ### Consumer container
 To test the consumer using the Docker image start a new container e.g. call it fcd-consumer  and the the Kafka client type to consumer
@@ -78,3 +78,4 @@ Test the producer container for the FCD data using the command
 
     $ docker run --rm -it --network=pilot-sc4-net --name fcd-producer --env ZOOKEEPER_SERVERS=zookeeper:2181 --env KAFKA_CLIENT_TYPE=producer lgslm/fcd-producer:v1.0.0 bash
 
+The application consist of a minimum set of 4 Docker containers, one container for Zookeeper, one for Kafka, one for the producer of the traffic data and one for the consumer.
