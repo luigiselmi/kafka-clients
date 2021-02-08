@@ -39,22 +39,19 @@ The software is based on Maven and can be build from the project root folder sim
 
     $ mvn install
 
-## Install and Run 
+## Run the producer 
 The build creates a jar file with all the dependences and the configuration of the main class in the target folder. 
 To start the producer three arguments must be passed to the application: the type of client, producer, the topic to which
 the producer will write the data and the source URI from which it will fetch the data. As an example
 
-    $ java -jar target/pilot-sc4-kafka-producer-0.0.1-SNAPSHOT-jar-with-dependencies.jar producer taxi http://feed.opendata.imet.gr:23577/fcd/gps.json
+    $ java -jar target/fcd-producer-1.0.0-jar-with-dependencies.jar producer taxi http://feed.opendata.imet.gr:23577/fcd/gps.json
 
-The producer will start to read the traffic data from the source and write it to the topic "taxi". To start the consumer simply 
-run again the same command as above passing "consumer" as argument instead of "producer" and the topic name
+The producer will start to read the traffic data from the source and write it to the topic "taxi". 
 
-    $ java -jar target/pilot-sc4-kafka-producer-0.0.1-SNAPSHOT-jar-with-dependencies.jar consumer taxi
+## Run the consumer
+To start the consumer simply execute again the same command as above passing "consumer" as argument instead of "producer" and the topic name
 
-## Usage 
-In order to read the data sent by the producer to a Kafka topic run the following command from the Kafka root folder to start a consumer of the topic
-
-    $ ./bin/kafka-console-consumer.sh --topic taxi --from-beginning --bootstrap-server localhost:9092
+    $ java -jar target/fcd-producer-1.0.0-jar-with-dependencies.jar consumer taxi
 
 
 ## Docker image
@@ -62,10 +59,22 @@ Build an image using this docker file. Run the following docker command
 
     $ docker build -t lgslm/fcd-producer:v1.0.0 .
 
-Test the Kafka producer for the FCD data  in a container. Run the following docker command for testing
+The application consists of a producer container and a consumer container. Both containers need to connect to a Kafka topic so Kafka must be available and the topic
+already created. Used the [docker-kafka](https://github.com/luigiselmi/docker-kafka) to build an image with Kafka (with Zookeeper) and create the topic used by the 
+producer and the consumer. The same image is also available on [DockerHub](https://hub.docker.com/repository/docker/lgslm/fcd-producer).
+ 
+### Consumer container
+To test the consumer using the Docker image start a new container e.g. call it fcd-consumer  and the the Kafka client type to consumer
 
-    $ docker run --rm -it --network=pilot-sc4-net --name fcd-producer --env ZOOKEEPER_SERVERS=zookeeper:2181 lgslm/fcd-producer:v1.0.0 bash
+    $ docker run --rm -it --network=pilot-sc4-net --name fcd-consumer --env ZOOKEEPER_SERVERS=zookeeper:2181 --env KAFKA_CLIENT_TYPE=consumer lgslm/fcd-producer:v1.0.0 bash
 
-The option --network tells docker to add this container to the same network where Kafka is available so that the host name used in producer.props file 
-in the bootstrap.servers=kafka:9092 can be resolved. The environment variable ZOOKEEPER_SERVERS tells the container the name of the Zookeeper server that 
-will be used by a Kafka script to figure out whether the topic has been created and is available. 
+The option --network tells docker to add this container to the same network where Kafka is available so that the host name used in producer.props and consumer.props files
+in the bootstrap.servers=kafka:9092 can be resolved. The environment variable ZOOKEEPER_SERVERS tells the container the name of the Zookeeper server that
+will be used by a Kafka script to figure out whether the topic has been created and is available. The KAFKA_CLIENT_TYPE environment variable is used to execute one of the
+two client types, i.e. producer or consumer.
+
+### Producer container
+Test the producer container for the FCD data using the command
+
+    $ docker run --rm -it --network=pilot-sc4-net --name fcd-producer --env ZOOKEEPER_SERVERS=zookeeper:2181 --env KAFKA_CLIENT_TYPE=producer lgslm/fcd-producer:v1.0.0 bash
+
