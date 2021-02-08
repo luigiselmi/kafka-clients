@@ -1,5 +1,5 @@
-Pilot SC4 Kafka Producer & Consumer [![Build Status](https://travis-ci.org/big-data-europe/pilot-sc4-kafka-producer.svg?branch=master)](https://travis-ci.org/big-data-europe/pilot-sc4-kafka-producer)
-===================================
+Distributed Traffic Monitoring [![Build Status](https://travis-ci.org/big-data-europe/pilot-sc4-kafka-producer.svg?branch=master)](https://travis-ci.org/big-data-europe/pilot-sc4-kafka-producer)
+==============================
 Producer and consumer of floating car data for Apache Kafka. 
 
 ## Description
