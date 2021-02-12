@@ -50,6 +50,7 @@ public class FcdProducer {
 	  //Integer partition = 0;
     
 	  // Set up the producer<key,value>. The key is a string value computed as the geohash of the coordinates pair.
+	  // It can be used to select the topic's partition to which a message will be sent.
     KafkaProducer<String, byte []> producer;
     try (InputStream props = Resources.getResource("producer.props").openStream()) {
         Properties properties = new Properties();
@@ -58,7 +59,6 @@ public class FcdProducer {
     }
     
     try {
-        
       String lastJsonString = "";
       int recordSetNumber = 0;
       String jsonString = "";
