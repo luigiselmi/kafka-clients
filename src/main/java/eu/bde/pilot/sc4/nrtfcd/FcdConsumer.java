@@ -33,7 +33,7 @@ public class FcdConsumer {
 	  topic = args[1];
 	  
     // set up house-keeping
-    ObjectMapper mapper = new ObjectMapper();
+    // ObjectMapper mapper = new ObjectMapper();
     
     // Set up the consumer
     KafkaConsumer<String, byte []> consumer;
@@ -89,9 +89,7 @@ public class FcdConsumer {
             }
         }
       
-      
     }
-}
-
+	}
 
 }
