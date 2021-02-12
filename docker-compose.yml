@@ -1,0 +1,31 @@
+version: '3.2'
+services:
+
+    fcd-producer:
+        image: lgslm/fcd-clients:v1.0.0
+        hostname: fcd-producer
+        container_name: fcd-producer
+        restart: unless-stopped
+        environment:
+            - ZOOKEEPER_SERVERS=zookeeper:2181 
+            - KAFKA_CLIENT_TYPE=producer
+        networks:
+          - pilot-sc4-net
+
+    fcd-consumer:
+        image: lgslm/fcd-clients:v1.0.0
+        hostname: fcd-consumer
+        container_name: fcd-consumer
+        environment:
+            - ZOOKEEPER_SERVERS=zookeeper:2181
+            - KAFKA_CLIENT_TYPE=consumer
+        depends_on:
+            - fcd-producer
+        expose:
+            - "9092"
+        networks:
+          - pilot-sc4-net
+
+networks:
+        pilot-sc4-net:
+            external: true
