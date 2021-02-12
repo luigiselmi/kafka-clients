@@ -61,8 +61,8 @@ public class FcdProducer {
     try {
       String lastJsonString = "";
       int recordSetNumber = 0;
-      String jsonString = "";
-      for (int i = 0; true; i++) { //infinite loop
+      String jsonString = ""; 
+      while(true) {//infinite loop
          jsonString = getRecordsString();
          if(jsonString != null && ! "".equals(jsonString) && jsonString.startsWith("[{")) {
            ArrayList<String> recordsList = getRecords(jsonString);

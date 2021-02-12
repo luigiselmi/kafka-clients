@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Properties;
+
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
@@ -55,7 +56,7 @@ public class FcdConsumer {
     //Injection<GenericRecord, byte[]> recordInjection = GenericAvroCodecs.toBinary(schema);
     GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<GenericRecord>(schema);
     
-    
+    try {
     int timeouts = 0;
     //noinspection InfiniteLoopStatement
     while (true) {
@@ -88,8 +89,13 @@ public class FcdConsumer {
                     throw new IllegalStateException("Shouldn't be possible to get message on topic " + record.topic());
             }
         }
-      
+      }
     }
-	}
-
+    catch (Throwable throwable) {
+      log.error(throwable.getStackTrace().toString());
+    }
+    finally {
+      consumer.close();  
+    }
+	 }
 }
