@@ -32,10 +32,7 @@ public class FcdConsumer {
     }
 	  
 	  topic = args[1];
-	  
-    // set up house-keeping
-    // ObjectMapper mapper = new ObjectMapper();
-    
+	    
     // Set up the consumer
     KafkaConsumer<String, byte []> consumer;
     try (InputStream props = Resources.getResource("consumer.props").openStream()) {
@@ -45,7 +42,6 @@ public class FcdConsumer {
     }
     
     consumer.subscribe(Arrays.asList(topic));
-    
     
     // Set up the schema of the messages that will be read from a kafka topic.
     Schema schema;
@@ -57,9 +53,8 @@ public class FcdConsumer {
     GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<GenericRecord>(schema);
     
     try {
-    int timeouts = 0;
-    //noinspection InfiniteLoopStatement
-    while (true) {
+      int timeouts = 0;
+      while (true) {
         // read records with a short timeout. If we time out, we don't really care.
         ConsumerRecords<String, byte []> records = consumer.poll(100);
         if (records.count() == 0) {
@@ -97,5 +92,5 @@ public class FcdConsumer {
     finally {
       consumer.close();  
     }
-	 }
+	}
 }
