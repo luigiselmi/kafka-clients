@@ -62,11 +62,6 @@
           <artifactId>bijection-avro_2.10</artifactId>
           <version>0.9.2</version>
         </dependency>
-      	<dependency>
-	        <groupId>org.apache.flink</groupId>
-	        <artifactId>flink-streaming-java_2.10</artifactId>
-	        <version>${flink.version}</version>
-	      </dependency>
 	      <dependency>
 	        <groupId>joda-time</groupId>
 	        <artifactId>joda-time</artifactId>
