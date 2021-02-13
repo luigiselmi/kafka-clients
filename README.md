@@ -65,7 +65,7 @@ already created. Use the [docker-kafka](https://github.com/luigiselmi/docker-kaf
 producer and the consumer. A docker-compose file is also available to start all the services. The image is also available on [DockerHub](https://hub.docker.com/repository/docker/lgslm/kafka).
  
 ### Consumer container
-To test the consumer using the Docker image start a new container e.g. call it fcd-consumer  and the the Kafka client type to consumer
+To test the consumer using the Docker image start a new container, e.g. call it fcd-consumer  and set the Kafka client type to consumer
 
     $ docker run --rm -d --network=kafka-clients-net --name fcd-consumer \
                           --env ZOOKEEPER_SERVERS=zookeeper:2181 \
@@ -76,7 +76,15 @@ To test the consumer using the Docker image start a new container e.g. call it f
 The option --network tells docker to add this container to the same network where Kafka is available so that the host name used in producer.props and consumer.props files
 in the bootstrap.servers=kafka:9092 can be resolved. The environment variable ZOOKEEPER_SERVERS tells the container the name of the Zookeeper server that
 will be used by a Kafka script to figure out whether the topic, whose name is provided with the TOPIC environment variable, has been created and is available. 
-The KAFKA_CLIENT_TYPE environment variable is used to execute one of the two client types, i.e. producer or consumer.
+The KAFKA_CLIENT_TYPE environment variable is used to execute one of the two client types, i.e. producer or consumer. The consumer writes the data pulled from the topic to a 
+log file that can be read from within the container. In order to log into the consumer container execute the command
+
+    $ docker exec -it fcd-consumer bash
+
+and then execute the command
+
+    # tail -f client.log
+
 
 ### Producer container
 Test the producer container for the FCD data using the command
