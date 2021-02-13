@@ -45,14 +45,14 @@ The build creates a jar file with all the dependences and the configuration of t
 To start the producer three arguments must be passed to the application: the type of client, producer, the topic to which
 the producer will write the data and the source URI from which it will fetch the data. As an example
 
-    $ java -jar target/fcd-producer-1.0.0-jar-with-dependencies.jar producer taxi http://feed.opendata.imet.gr:23577/fcd/gps.json
+    $ java -jar target/fcd-kafka-clients-1.0.0-jar-with-dependencies.jar producer taxi http://feed.opendata.imet.gr:23577/fcd/gps.json
 
 The producer will start to read the traffic data from the source and write it to the topic "taxi". 
 
 ## Run the consumer
 To start the consumer simply execute again the same command as above passing "consumer" as argument instead of "producer" and the topic name
 
-    $ java -jar target/fcd-producer-1.0.0-jar-with-dependencies.jar consumer taxi
+    $ java -jar target/fcd-kafka-clients-1.0.0-jar-with-dependencies.jar consumer taxi
 
 
 ## Docker image
