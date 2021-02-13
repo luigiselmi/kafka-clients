@@ -58,7 +58,7 @@ To start the consumer simply execute again the same command as above passing "co
 ## Docker image
 Build an image using this docker file. Run the following docker command
 
-    $ docker build -t lgslm/fcd-producer:v1.0.0 .
+    $ docker build -t lgslm/fcd-kafka-clients:v1.0.0 .
 
 The application consists of a producer container and a consumer container. Both containers need to connect to a Kafka topic so Kafka must be available and the topic
 already created. Use the [docker-kafka](https://github.com/luigiselmi/docker-kafka) project to build an image with Kafka (with Zookeeper) and create the topic used by the 
