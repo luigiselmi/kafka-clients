@@ -16,6 +16,7 @@ services:
         image: lgslm/fcd-clients:v1.0.0
         hostname: fcd-consumer
         container_name: fcd-consumer
+        restart: unless-stopped
         environment:
             - ZOOKEEPER_SERVERS=zookeeper:2181
             - KAFKA_CLIENT_TYPE=consumer
