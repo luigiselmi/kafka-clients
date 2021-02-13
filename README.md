@@ -67,16 +67,24 @@ producer and the consumer. A docker-compose file is also available to start all 
 ### Consumer container
 To test the consumer using the Docker image start a new container e.g. call it fcd-consumer  and the the Kafka client type to consumer
 
-    $ docker run --rm -it --network=pilot-sc4-net --name fcd-consumer --env ZOOKEEPER_SERVERS=zookeeper:2181 --env KAFKA_CLIENT_TYPE=consumer lgslm/fcd-producer:v1.0.0 bash
+    $ docker run --rm -it --network=kafka-clients-net --name fcd-consumer \
+                          --env ZOOKEEPER_SERVERS=zookeeper:2181 \
+                          --env KAFKA_CLIENT_TYPE=consumer \
+                          --env TOPIC=taxi \
+                          lgslm/fcd-producer:v1.0.0 bash
 
 The option --network tells docker to add this container to the same network where Kafka is available so that the host name used in producer.props and consumer.props files
 in the bootstrap.servers=kafka:9092 can be resolved. The environment variable ZOOKEEPER_SERVERS tells the container the name of the Zookeeper server that
-will be used by a Kafka script to figure out whether the topic has been created and is available. The KAFKA_CLIENT_TYPE environment variable is used to execute one of the
-two client types, i.e. producer or consumer.
+will be used by a Kafka script to figure out whether the topic, whose name is provided with the TOPIC environment variable, has been created and is available. 
+The KAFKA_CLIENT_TYPE environment variable is used to execute one of the two client types, i.e. producer or consumer.
 
 ### Producer container
 Test the producer container for the FCD data using the command
 
-    $ docker run --rm -it --network=pilot-sc4-net --name fcd-producer --env ZOOKEEPER_SERVERS=zookeeper:2181 --env KAFKA_CLIENT_TYPE=producer lgslm/fcd-producer:v1.0.0 bash
+    $ docker run --rm -it --network=kafka-clients-net --name fcd-producer \
+                          --env ZOOKEEPER_SERVERS=zookeeper:2181 \
+                          --env KAFKA_CLIENT_TYPE=producer \
+                          --env TOPIC=taxi \
+                          lgslm/fcd-producer:v1.0.0 bash
 
 The application consist of a minimum set of 4 Docker containers, one container for Zookeeper, one for Kafka, one for the producer of the traffic data and one for the consumer.
