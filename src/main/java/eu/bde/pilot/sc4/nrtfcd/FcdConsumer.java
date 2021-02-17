@@ -68,16 +68,19 @@ public class FcdConsumer {
               ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(record.value());
               Decoder decoder = DecoderFactory.get().binaryDecoder(byteArrayInputStream, null);
               GenericRecord recordMessage = datumReader.read(null, decoder);
-            	int deviceId = (int) recordMessage.get("device_id");
             	String timestamp = recordMessage.get("timestamp").toString();
             	double lon = (double) recordMessage.get("lon");
             	double lat = (double) recordMessage.get("lat");
             	double altitude = (double) recordMessage.get("altitude");
             	double speed = (double) recordMessage.get("speed");
             	double orientation = (double) recordMessage.get("orientation");
-            	int transfer = (int) recordMessage.get("transfer");
-            	log.info("key: " + key + "\n device_id: " + deviceId + "\n timestamp: " + timestamp + "\n longitude: " 
-            	  + lon + "\n latitude: " + lat + "\n speed: " + speed);
+            	log.info("\n timestamp: " + timestamp + 
+            	    "\n longitude: " + lon + 
+            	    "\n latitude: " + lat +
+            	    "\n geohash: " + key +
+            	    "\n altitude: " + altitude +
+            	    "\n speed: " + speed + 
+            	    "\n orientation: " + orientation);
             }
             else {
                     throw new IllegalStateException("Shouldn't be possible to get message on topic " + record.topic());
