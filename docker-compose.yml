@@ -4,7 +4,6 @@ services:
     fcd-producer:
         image: lgslm/fcd-kafka-clients:v1.0.0
         hostname: fcd-producer
-        container_name: fcd-producer
         restart: unless-stopped
         environment:
             - ZOOKEEPER_SERVERS=zookeeper:2181 
@@ -16,7 +15,6 @@ services:
     fcd-consumer:
         image: lgslm/fcd-kafka-clients:v1.0.0
         hostname: fcd-consumer
-        container_name: fcd-consumer
         restart: unless-stopped
         environment:
             - ZOOKEEPER_SERVERS=zookeeper:2181
