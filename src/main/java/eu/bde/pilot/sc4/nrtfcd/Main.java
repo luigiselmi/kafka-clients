@@ -19,8 +19,11 @@ public class Main {
             case "consumer":
                 FcdConsumer.main(args);
                 break;
+            case "consumer-elasticsearch":
+              FcdElasticsearchConsumer.main(args);
+              break;
             default:
-                throw new IllegalArgumentException("Don't know how to do " + args[0]);
+                throw new IllegalArgumentException("The client name " + args[0] + " does not exist.");
         }
     }
 }
