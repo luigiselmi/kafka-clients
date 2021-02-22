@@ -91,7 +91,7 @@ public class FcdProducer {
     } 
     catch (Throwable throwable) {
         log.error(throwable.getStackTrace().toString());
-        //Thread.currentThread().interrupt();
+        //Thread.currentThread();
     }
     finally {
         producer.close();
