@@ -57,7 +57,7 @@ To start the consumer simply execute again the same command as above passing "co
 ## Run the Elasticsearch Consumer
 Another consumer to send the data to an Elasticsearch index can be used. An Elasticsearch docker container with an index already set up to store
 the floating car data is available in the [docker-elasticsearch](https://github.com/luigiselmi/docker-elasticsearch) container. The Elasticsearch container 
-must be running before starting this consumer.The command to start the Elasticsearch consumer is almost the same, the only difference is in the name of the 
+must be running before starting this consumer. The command to start the Elasticsearch consumer is almost the same, the only difference is in the name of the 
 consumer
 
    $ java -jar target/fcd-kafka-clients-1.0.0-jar-with-dependencies.jar consumer-elasticsearch taxi 
