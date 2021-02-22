@@ -41,13 +41,17 @@ public class FcdElasticsearchConsumer {
     // Set up the consumer
     KafkaConsumer<String, byte []> consumer;
     String elasticsearchHostName = null;
+    String elasticsearchIndex = null;
     try (InputStream props = Resources.getResource("elasticsearch-consumer.props").openStream()) {
         Properties properties = new Properties();
         properties.load(props);
         consumer = new KafkaConsumer<>(properties);
+        
         elasticsearchHostName = properties.getProperty("elasticsearch.name");
         if (elasticsearchHostName == null)
-          elasticsearchHostName = "localhost"; 
+          elasticsearchHostName = "localhost";
+        
+        elasticsearchIndex = properties.getProperty("elasticsearch.index");
     }
     
     consumer.subscribe(Arrays.asList(topic));
@@ -74,7 +78,6 @@ public class FcdElasticsearchConsumer {
         @Override
         public void onResponse(IndexResponse indexResponse) {
           System.out.println("Response status: " + indexResponse.status().getStatus());
-            
         }
 
         @Override
@@ -83,7 +86,7 @@ public class FcdElasticsearchConsumer {
         }
       };
       
-      IndexRequest indexRequest = new IndexRequest("thessaloniki");
+      IndexRequest indexRequest = new IndexRequest(elasticsearchIndex);
       
       while (true) {
         // read records with a short timeout. If we time out, we don't really care.
@@ -112,7 +115,7 @@ public class FcdElasticsearchConsumer {
             	// write to Elasticsearch
             	indexRequest.id(timestamp);
             	String json = "{" +
-            	    "\"geohash\":" + "\"" + "luigi" + "\"," + 
+            	    "\"geohash\":" + "\"" + key + "\"," + 
             	    "\"timestamp\":" + "\"" + timestamp + "\"," +
             	    "\"location\": \"" + lat + ", " + lon + "\"," +
             	    "\"speed\":" + "\"" + speed + "\"," +
@@ -124,7 +127,7 @@ public class FcdElasticsearchConsumer {
             	//log.info("new record created at" + timestamp);
             }
             else {
-                 throw new IllegalStateException("Shouldn't be possible to get message on topic " + record.topic());
+               throw new IllegalStateException("Shouldn't be possible to get message on topic " + record.topic());
             }
         }
       }
