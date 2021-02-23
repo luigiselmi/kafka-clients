@@ -6,7 +6,7 @@
 #
 # 2) Test the Kafka producer for the FCD data  in a container. Run the following docker command for testing
 #
-#    $ docker run --rm -it --network=pilot-sc4-net --name fcd-producer \
+#    $ docker run --rm -it --network=kafka-clients-net --name fcd-producer \
 #                   --env ZOOKEEPER_SERVERS=zookeeper:2181 \
 #                   --env KAFKA_CLIENT_TYPE=producer \
 #                   --env TOPIC=taxi \
