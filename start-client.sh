@@ -12,6 +12,9 @@ then
 elif [[ $KAFKA_CLIENT_TYPE = "consumer" ]]
 then 
   java -jar fcd-kafka-clients-1.0.0-jar-with-dependencies.jar consumer $TOPIC
+elif [[ $KAFKA_CLIENT_TYPE = "consumer-elasticsearch" ]]
+then 
+  java -jar fcd-kafka-clients-1.0.0-jar-with-dependencies.jar consumer-elasticsearch $TOPIC
 else
   echo "The environment variable KAFKA_CLIENT_TYPE=$KAFKA_CLIENT_TYPE must be producer or consumer"
 fi
