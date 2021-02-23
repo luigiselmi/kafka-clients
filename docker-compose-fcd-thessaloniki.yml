@@ -1,0 +1,51 @@
+version: '3.9'
+services:
+    zookeeper:
+        image: lgslm/zookeeper:v1.0.0
+        hostname: zookeeper
+        environment:
+            - MYID=1
+        expose:
+            - "2181"
+        ports:
+            - "2181:2181"
+        networks:
+          - kafka-clients-net
+    
+    kafka:
+        image: lgslm/kafka:v1.0.0
+        hostname: kafka
+        environment:
+            - SERVICE_PRECONDITION=zookeeper:2181
+            - ZOOKEEPER_SERVERS=zookeeper:2181
+            - TOPIC=taxi
+        depends_on:
+            - zookeeper
+        expose:
+            - "9092"
+        networks:
+          - kafka-clients-net
+    
+    elasticsearch:
+        image: lgslm/elasticsearch:v1.0.0
+        hostname: elasticsearch
+        environment:
+            - discovery.type=single-node
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        networks:
+          - kafka-clients-net
+    
+    kibana:
+        image: docker.elastic.co/kibana/kibana:7.10.1
+        depends_on:
+          - elasticsearch
+        ports:
+          - "5601:5601"
+        networks:
+          - kafka-clients-net 
+
+networks:
+        kafka-clients-net:
+            external: true
