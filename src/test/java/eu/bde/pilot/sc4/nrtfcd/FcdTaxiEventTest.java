@@ -10,6 +10,10 @@ import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import com.google.common.io.Resources;
 
@@ -17,16 +21,20 @@ public class FcdTaxiEventTest {
 
   String jsonRecord; // string containing one json record (the first one)
   String csvRecord; // string containing one csv record (the first one)
+  private static final Logger log = LogManager.getLogger(FcdTaxiEventTest.class);
   
   @Before
   public void setUp() throws Exception {
     jsonRecord = getJsonRecord();
     csvRecord = getCsvRecord(); 
   }
+  
+  
   /*
    * Parses the json data and select the 1st record
    */
   private String getJsonRecord() throws IOException {
+    log.info("Test json data parser");
     InputStream jsonStream = Resources.getResource("gps-sample-data.json").openStream();
     BufferedReader jsonReader = new BufferedReader(new InputStreamReader(jsonStream));
     String jsonLine;
@@ -42,6 +50,7 @@ public class FcdTaxiEventTest {
    * Parse the csv data and select the 1st record
    */
   private String getCsvRecord() throws IOException {
+    log.info("Test csv data parser");
     InputStream csvStream = Resources.getResource("fcd-sample-data.csv").openStream();
     BufferedReader csvReader = new BufferedReader(new InputStreamReader(csvStream));
     String csvLine;

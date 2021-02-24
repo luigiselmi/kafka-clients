@@ -23,12 +23,16 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.google.common.io.Resources;
 
 public class FcdElasticsearchConsumer {
   
   private static String topic;
   //private static final Logger log = LoggerFactory.getLogger(FcdElasticsearchConsumer.class);
+  private static final Logger log = LogManager.getLogger(FcdElasticsearchConsumer.class);
+  
 	
 	public static void main(String[] args) throws IOException {
 	  
@@ -52,6 +56,7 @@ public class FcdElasticsearchConsumer {
           elasticsearchHostName = "localhost";
         
         elasticsearchIndex = properties.getProperty("elasticsearch.index");
+        log.info("Elasticsearch host name: " + elasticsearchHostName);
     }
     
     consumer.subscribe(Arrays.asList(topic));
@@ -133,7 +138,7 @@ public class FcdElasticsearchConsumer {
       }
     }
     catch (Throwable throwable) {
-      //log.error(throwable.getStackTrace().toString());
+      log.error(throwable.getStackTrace().toString());
     }
     finally {
       elasticsearchClient.close();

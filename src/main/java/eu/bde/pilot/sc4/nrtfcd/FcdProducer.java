@@ -1,5 +1,10 @@
 package eu.bde.pilot.sc4.nrtfcd;
-
+/**
+ * This class is a Kafka producer of near real-time floating car data. It fetches data from a web service
+ * and send the records in a Kafka topic using the avro binary format. 
+ * @author Luigi Selmi
+ *
+ */
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,8 +20,8 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.google.common.io.Resources;
 import com.google.gson.JsonArray;
@@ -24,18 +29,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import eu.bde.pilot.sc4.nrtfcd.utils.Geohash;
-/**
- * This class is a Kafka producer of near real-time floating car data. It fetches data from a web service
- * and send the records in a Kafka topic using the avro binary format. 
- * @author luigi
- *
- */
+
 public class FcdProducer {
   
   private static String topic = null;
   private static String sourceUrl = null;
   public static final String FCD_THESSALONIKI_SCHEMA = "fcd-record-schema.avsc";
-  private static final Logger log = LoggerFactory.getLogger(FcdProducer.class);
+  
+  //private static final Logger log = LoggerFactory.getLogger(FcdProducer.class);
+  private static final Logger log = LogManager.getLogger(FcdProducer.class);
+  
   private static transient DateTimeFormatter timeFormatter =
       DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
 	
@@ -82,7 +85,7 @@ public class FcdProducer {
              }
            }
            else {
-              System.out.print("-\n");
+              log.warn("\nNo records.");
            }
           
            Thread.sleep(30000); //wait for the new data to be available
@@ -126,13 +129,13 @@ public class FcdProducer {
 	      
 		}
 			catch (IOException ioe) {
-		  System.err.println(ioe.getMessage());
+			  log.debug(ioe.getMessage());
 		}
 	    finally {
 		  try {
 		    is.close();
 		  } catch (IOException e) {        
-		    System.err.println(e.getMessage());
+		    log.debug(e.getMessage());
 		  }
 		}
 	
@@ -153,7 +156,7 @@ public class FcdProducer {
       for (int i = 0; i < jsonRecords.size(); i++) {   
         JsonObject jsonRecord = jsonRecords.get(i).getAsJsonObject();
         String recordString = jsonRecord.toString();
-        //System.out.println(recordString);
+        log.debug(recordString);
         recordsList.add(recordString);
       }
     }

@@ -1,5 +1,11 @@
 package eu.bde.pilot.sc4.nrtfcd;
-
+/**
+ * This class is a Kafka consumer of near real-time floating car data. It fetches data from a Kafka topic
+ * in avro binary format and write the records to a log file.
+ *  
+ * @author Luigi Selmi
+ *
+ */
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,15 +20,16 @@ import org.apache.avro.io.DecoderFactory;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.google.common.io.Resources;
 
 public class FcdConsumer {
   
   private static String topic;
-  private static final Logger log = LoggerFactory.getLogger(FcdConsumer.class);
+  //private static final Logger log = LoggerFactory.getLogger(FcdConsumer.class);
+  private static final Logger log = LogManager.getLogger(FcdConsumer.class);
 	
 	public static void main(String[] args) throws IOException {
 	  
