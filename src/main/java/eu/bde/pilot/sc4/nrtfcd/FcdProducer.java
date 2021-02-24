@@ -1,10 +1,11 @@
-package eu.bde.pilot.sc4.nrtfcd;
 /**
  * This class is a Kafka producer of near real-time floating car data. It fetches data from a web service
  * and send the records in a Kafka topic using the avro binary format. 
  * @author Luigi Selmi
  *
  */
+package eu.bde.pilot.sc4.nrtfcd;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +36,7 @@ public class FcdProducer {
   private static String topic = null;
   private static String sourceUrl = null;
   public static final String FCD_THESSALONIKI_SCHEMA = "fcd-record-schema.avsc";
-  
+  public static final int DELAY_BETWEEN_REQUESTS_SEC = 30;
   //private static final Logger log = LoggerFactory.getLogger(FcdProducer.class);
   private static final Logger log = LogManager.getLogger(FcdProducer.class);
   
@@ -50,6 +51,7 @@ public class FcdProducer {
 	 
 	  topic = args[1];
 	  sourceUrl = args[2];
+	  int DELAY_BETWEEN_REQUESTS_SEC = 30;
 	  //Integer partition = 0;
     
 	  // Set up the producer<key,value>. The key is a string value computed as the geohash of the coordinates pair.
@@ -67,29 +69,34 @@ public class FcdProducer {
       String jsonString = ""; 
       while(true) {//infinite loop
          jsonString = getRecordsString();
-         if(jsonString != null && ! "".equals(jsonString) && jsonString.startsWith("[{")) {
+         boolean isJson = jsonString != null && ! "".equals(jsonString) && jsonString.startsWith("[{");
+         if(isJson) {
            ArrayList<String> recordsList = getRecords(jsonString);
-           if (! lastJsonString.equals(jsonString) ) {
+           boolean isNewRecordSet = ! lastJsonString.equals(jsonString);
+           if (isNewRecordSet) {
+             log.info("New recordset number " + recordSetNumber);
              Iterator<String> irecords = recordsList.iterator();
              while(irecords.hasNext()) {
                FcdTaxiEvent event = FcdTaxiEventUtils.fromJsonString(irecords.next());
                byte[] value = event.toBinary();
                Long timestamp = event.timestamp.getMillis();
+               // The geohash with precision 4 can be used to split the data in two sets to be sent to different partitions 
                String key = Geohash.encodeBase32(event.lat, event.lon, 20); // bits = 20 -> precision 4
                ProducerRecord<String, byte []> record = new ProducerRecord<String, byte []>(topic, key, value);
                RecordMetadata metadata = producer.send(record).get();
                producer.flush();
                lastJsonString = jsonString;
-               log.info("\nSent recordset number " + recordSetNumber + " timestamp: " + timestamp);
-               recordSetNumber++;
+               log.debug("Sent new record to kafka topic " + topic + ", timestamp: " + timestamp);
              }
+             log.info("Sent " + recordsList.size() + " new records to kafka topic " + topic);
+             recordSetNumber++;
            }
            else {
-              log.warn("\nNo records.");
-           }
-          
-           Thread.sleep(30000); //wait for the new data to be available
+              log.warn("No new records set. Sending new request to " + sourceUrl + " in " + DELAY_BETWEEN_REQUESTS_SEC + " seconds.");
+           }      
          }
+         
+         Thread.sleep(DELAY_BETWEEN_REQUESTS_SEC * 1000); //wait for the new data to be available
       }
     } 
     catch (Throwable throwable) {
@@ -97,8 +104,8 @@ public class FcdProducer {
         //Thread.currentThread();
     }
     finally {
-        producer.close();
-        
+       producer.close();
+        log.fatal("The producer has benn closed.");       
     }
 
   }
@@ -115,7 +122,6 @@ public class FcdProducer {
 		  // Connect to CERTH WS
 		  URL url = new URL(sourceUrl);
 		  conn = url.openConnection();
-		 
 		  conn.connect();
 		  is = conn.getInputStream();
 		  BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -126,19 +132,20 @@ public class FcdProducer {
 		  }
 		  
 		  recordsString = records.toString();
+		  log.debug("Record string: " + recordsString);
 	      
 		}
-			catch (IOException ioe) {
-			  log.debug(ioe.getMessage());
+		catch (IOException ioe) {
+			  log.error(ioe.getMessage());
 		}
-	    finally {
+	  finally {
 		  try {
 		    is.close();
 		  } catch (IOException e) {        
-		    log.debug(e.getMessage());
+		    log.error(e.getMessage());
 		  }
 		}
-	
+	  
 		return recordsString;
 	}
 	
@@ -156,7 +163,7 @@ public class FcdProducer {
       for (int i = 0; i < jsonRecords.size(); i++) {   
         JsonObject jsonRecord = jsonRecords.get(i).getAsJsonObject();
         String recordString = jsonRecord.toString();
-        log.debug(recordString);
+        log.debug("Record retrieved: " + recordString);
         recordsList.add(recordString);
       }
     }

@@ -28,7 +28,6 @@ import com.google.common.io.Resources;
 public class FcdConsumer {
   
   private static String topic;
-  //private static final Logger log = LoggerFactory.getLogger(FcdConsumer.class);
   private static final Logger log = LogManager.getLogger(FcdConsumer.class);
 	
 	public static void main(String[] args) throws IOException {
@@ -62,11 +61,11 @@ public class FcdConsumer {
       int timeouts = 0;
       while (true) {
         // read records with a short timeout. If we time out, we don't really care.
-        ConsumerRecords<String, byte []> records = consumer.poll(100);
+        ConsumerRecords<String, byte []> records = consumer.poll(FcdProducer.DELAY_BETWEEN_REQUESTS_SEC * 1000);
         if (records.count() == 0) {
             timeouts++;
         } else {
-            System.out.printf("Got %d records after %d timeouts\n", records.count(), timeouts);
+            log.debug("Got %d records after %d timeouts\n", records.count(), timeouts);
             timeouts = 0;
         }
         for (ConsumerRecord<String, byte []> record : records) {
@@ -99,7 +98,8 @@ public class FcdConsumer {
       log.error(throwable.getStackTrace().toString());
     }
     finally {
-      consumer.close();  
+      consumer.close();
+      log.info("Kafka consumer closed.");
     }
 	}
 }

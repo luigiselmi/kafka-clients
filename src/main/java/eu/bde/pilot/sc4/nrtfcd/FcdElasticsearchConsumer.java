@@ -25,14 +25,15 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+
 import com.google.common.io.Resources;
+
+import eu.bde.pilot.sc4.nrtfcd.utils.Geohash;
 
 public class FcdElasticsearchConsumer {
   
   private static String topic;
-  //private static final Logger log = LoggerFactory.getLogger(FcdElasticsearchConsumer.class);
   private static final Logger log = LogManager.getLogger(FcdElasticsearchConsumer.class);
-  
 	
 	public static void main(String[] args) throws IOException {
 	  
@@ -76,18 +77,16 @@ public class FcdElasticsearchConsumer {
                 new HttpHost(elasticsearchHostName, 9201, "http")));
     
     try {
-   
       int timeouts = 0;
-      
+   
       ActionListener<IndexResponse> listener = new ActionListener<IndexResponse>() {
         @Override
         public void onResponse(IndexResponse indexResponse) {
-          System.out.println("Response status: " + indexResponse.status().getStatus());
+          log.debug("Response status: " + indexResponse.status().getStatus());
         }
-
         @Override
         public void onFailure(Exception e) {
-           e.printStackTrace();      
+           log.warn("Failed to index data." + e.getMessage());      
         }
       };
       
@@ -95,54 +94,58 @@ public class FcdElasticsearchConsumer {
       
       while (true) {
         // read records with a short timeout. If we time out, we don't really care.
-        ConsumerRecords<String, byte []> records = consumer.poll(1000);
-        if (records.count() == 0) {
+        ConsumerRecords<String, byte []> records = consumer.poll(FcdProducer.DELAY_BETWEEN_REQUESTS_SEC * 1000);
+        int numberOfRecords = records.count();
+        if (numberOfRecords == 0) {
             timeouts++;
         } else {
-            System.out.printf("Got %d records after %d timeouts\n", records.count(), timeouts);
+            log.debug("Got %d records after %d timeouts\n", numberOfRecords, timeouts);
             timeouts = 0;
         }
 
         for (ConsumerRecord<String, byte []> record : records) {
-            if(record.topic().equals(topic)) {
-              String key = record.key();
-              ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(record.value());
-              Decoder decoder = DecoderFactory.get().binaryDecoder(byteArrayInputStream, null);
-              GenericRecord recordMessage = datumReader.read(null, decoder);
-            	String timestamp = recordMessage.get("timestamp").toString();
-            	int timestamplength = timestamp.length();
-            	timestamp = timestamp.substring(0, timestamplength - 4);
-            	double lon = (double) recordMessage.get("lon");
-            	double lat = (double) recordMessage.get("lat");
-            	double altitude = (double) recordMessage.get("altitude");
-            	double speed = (double) recordMessage.get("speed");
-            	double orientation = (double) recordMessage.get("orientation");
-            	// write to Elasticsearch
-            	indexRequest.id(timestamp);
-            	String json = "{" +
-            	    "\"geohash\":" + "\"" + key + "\"," + 
-            	    "\"timestamp\":" + "\"" + timestamp + "\"," +
-            	    "\"location\": \"" + lat + ", " + lon + "\"," +
-            	    "\"speed\":" + "\"" + speed + "\"," +
-            	    "\"orientation\":" + "\"" + orientation + "\"," +
-            	    "\"count\":" + "1" +
-            	  "}";
-              indexRequest.source(json, XContentType.JSON);
-            	Cancellable indexResponse = elasticsearchClient.indexAsync(indexRequest, RequestOptions.DEFAULT, listener);
-            	//log.info("new record created at" + timestamp);
-            }
-            else {
-               throw new IllegalStateException("Shouldn't be possible to get message on topic " + record.topic());
-            }
+          if(record.topic().equals(topic)) {
+            String key = record.key();
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(record.value());
+            Decoder decoder = DecoderFactory.get().binaryDecoder(byteArrayInputStream, null);
+            GenericRecord recordMessage = datumReader.read(null, decoder);
+            String timestamp = recordMessage.get("timestamp").toString();
+            int timestamplength = timestamp.length();
+            timestamp = timestamp.substring(0, timestamplength - 4);
+            double lon = (double) recordMessage.get("lon");
+            double lat = (double) recordMessage.get("lat");
+            String geohash = Geohash.encodeBase32(lat, lon, 30); // precision 6
+            double altitude = (double) recordMessage.get("altitude");
+            double speed = (double) recordMessage.get("speed");
+            double orientation = (double) recordMessage.get("orientation");
+            // write to Elasticsearch
+            indexRequest.id(timestamp);
+            String json = "{" +
+              "\"geohash\":" + "\"" + geohash + "\"," + 
+            	"\"timestamp\":" + "\"" + timestamp + "\"," +
+            	"\"location\": \"" + lat + ", " + lon + "\"," +
+            	"\"speed\":" + "\"" + speed + "\"," +
+            	"\"orientation\":" + "\"" + orientation + "\"," +
+            	"\"count\":" + "1" +
+            	"}";
+            indexRequest.source(json, XContentType.JSON);
+            Cancellable indexResponse = elasticsearchClient.indexAsync(indexRequest, RequestOptions.DEFAULT, listener);
+            log.debug("New record:\n" + json);
+          }
+          else {
+            throw new IllegalStateException("Shouldn't be possible to get message on topic " + record.topic());
+          }
         }
+        log.info("Indexed " + numberOfRecords + " records in Elasticsearch");
       }
     }
     catch (Throwable throwable) {
-      log.error(throwable.getStackTrace().toString());
+      log.error("Error while retrieving data from the Kafka topic.\n" + throwable.getStackTrace().toString());
     }
     finally {
       elasticsearchClient.close();
       consumer.close();  
+      log.info("Closed connection to the Kafka topic and to Elasticsearch.");
     }
 	}
 }
