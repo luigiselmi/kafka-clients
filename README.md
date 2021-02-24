@@ -110,14 +110,14 @@ infrastructure components: Zookeeper, Kafka, Elasticsearch and Kibana
 
     $ docker-compose -f docker-compose-fcd-thessaloniki.yml up -d
 
-After all the components are up and running and the Elasticsearch index has been created we can open a tab in a browser and point to the Kibana main page at http://localhost:5601. 
-Once Kibana is ready we can create the patter index "thessaloniki" so that Kibana will fetch the documents from that index in Elasticsearch. The index is still empty but now we can
+After all the components are up and running and the Elasticsearch index has been created we can open a tab in a browser and point it to the Kibana main page at http://localhost:5601. 
+Once Kibana is ready we can create the index pattern "thessaloniki" so that Kibana will fetch the documents from that index in Elasticsearch. The index is still empty but now we can
 start the producer and the consumer. The producer will fetch the data from the CERTH web service and send it to a Kafka topic. The Elasticsearch consumer will fetch the records from 
 the Kafka topic and send it to Elasticsearch for indexing.
 
     $ docker-compose up -d
 
-After few seconds we should from Kibana that the index contains some documents. We can refresh Kibana from time to time. We can create map visulizations and filter the data by any of 
+After few seconds we should see from Kibana that the index now contains some documents. We can refresh Kibana from time to time. We can create map visulizations and filter the data by any of 
 the properties of the taxis such as speed, timestamp and geohash.
 
 ![Kibana Map Visualization](/images/thessaloniki-20210224.png)
