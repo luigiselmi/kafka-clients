@@ -18,7 +18,7 @@
 #    to figure out whether the topic has been created and is available.
 #    To start a consumer, start a new container e.g. call it fcd-consumer  and the the Kafka client type to consumer
 #
-#    $ docker run --rm -it --network=pilot-sc4-net --name fcd-consumer \
+#    $ docker run --rm -it --network=kafka-clients-net --name fcd-consumer \
 #                    --env ZOOKEEPER_SERVERS=zookeeper:2181 \
 #                    --env KAFKA_CLIENT_TYPE=consumer \
 #                    --env TOPIC=taxi \
