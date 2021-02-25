@@ -105,13 +105,14 @@ Test the producer container for the FCD data using the command
 The application consist of a minimum set of 4 Docker containers, one container for Zookeeper, one for Kafka, one for the producer of the traffic data and one for the consumer.
 
 ## Traffic Visualization
-The application that uses the floating car data from the taxis as a proxy to monitor the traffic in the city of Thessaloniki consists of a certain number of docker containers.
-It can be deployed on a single node, such a laptop with Docker installed, or in a cluster of nodes, such as EC2 servers on Amazon cloud. We start with the deployment on a single 
-machine and in the following section is described how to set up a Docker swarm to distribute the containers is different nodes.
+The application uses the floating car data from the taxis as a proxy to monitor the traffic in the city of Thessaloniki. It consists of a certain number of docker containers.
+It can be deployed on a single node, such as a laptop with Docker installed, or in a cluster of nodes, such as EC2 servers on the Amazon cloud. We start with the deployment on a single 
+machine and in the following section is described how to set up a Docker swarm to distribute the containers across different nodes. All the docker images are available on Docker Hub
+so they do not have to be built on the local machine.
 
 ### Deploy to a single node 
 The docker containers can be started using two docker-compose files. The first docker-compose file is used to set up the frameworks used by the Kafka producer and consumer:
-Zookeeper, kafka, Elasticsearch and Kibana. We can start all of them with a single command:
+Zookeeper, Kafka, Elasticsearch and Kibana. We can start all of them with a single command:
 
     $ docker-compose -f docker-compose-fcd-thessaloniki.yml up -d
 
