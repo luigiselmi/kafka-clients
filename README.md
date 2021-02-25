@@ -139,3 +139,7 @@ that the swarm master and workers can communicate. We need also a rule to make t
 * TCP and UDP port 7946 for communication among nodes
 * UDP port 4789 for overlay network traffic
 * TCP port 5601 Kibana
+
+After the swarm has been created with a manager the workers, we can check that they are available and ready by executing the following command on the manager node
+
+    $ docker node ls
