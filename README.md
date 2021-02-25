@@ -105,12 +105,17 @@ Test the producer container for the FCD data using the command
 The application consist of a minimum set of 4 Docker containers, one container for Zookeeper, one for Kafka, one for the producer of the traffic data and one for the consumer.
 
 ## Traffic Visualization
-A full distributed application with the producer and the consumer for Elasticsearch can be started using two docker-compose files. The first docker-compose file is used to run the
-infrastructure components: Zookeeper, Kafka, Elasticsearch and Kibana
+The application that uses the floating car data from the taxis as a proxy to monitor the traffic in the city of Thessaloniki consists of a certain number of docker containers.
+It can be deployed on a single node, such a laptop with Docker installed, or in a cluster of nodes, such as EC2 servers on Amazon cloud. We start with the deployment on a single 
+machine and in the following section is described how to set up a Docker swarm to distribute the containers is different nodes.
+
+### Deploy to a single node 
+The docker containers can be started using two docker-compose files. The first docker-compose file is used to set up the frameworks used by the Kafka producer and consumer:
+Zookeeper, kafka, Elasticsearch and Kibana. We can start all of them with a single command:
 
     $ docker-compose -f docker-compose-fcd-thessaloniki.yml up -d
 
-After all the components are up and running and the Elasticsearch index has been created we can open a tab in a browser and point it to the Kibana main page at http://localhost:5601. 
+After all the architecture's components are up and running and the Elasticsearch index has been created we can open a tab in a browser and point it to the Kibana main page at http://localhost:5601. 
 Once Kibana is ready we can create the index pattern "thessaloniki" so that Kibana will fetch the documents from that index in Elasticsearch. The index is still empty but now we can
 start the producer and the consumer. The producer will fetch the data from the CERTH web service and send it to a Kafka topic. The Elasticsearch consumer will fetch the records from 
 the Kafka topic and send it to Elasticsearch for indexing.
@@ -121,3 +126,5 @@ After few seconds we should see from Kibana that the index now contains some doc
 the properties of the taxis such as speed, timestamp and geohash.
 
 ![Kibana Map Visualization](/images/thessaloniki-20210224.png)
+
+### Deploy to Docker swarm (cluster)
