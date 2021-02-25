@@ -173,3 +173,7 @@ The last step is to deploy the producer and the Elasticsearch consumer using the
 
 With this command the producer and consumer containers will be deployed in a different stack but in the same network as stated in the docker-compose file, so the services will be able to 
 communicate. After some seconds we should be able to see the first data points in Kibana.
+
+### Troubleshooting
+In case you know some documents have been indexed but you can't see visualize the data you may need to clear the cache of the index. From the main menu go to Stack Management and then 
+Index Management, select the index "thessaloniki", and from the "Manage" button click "Clear index cache".
