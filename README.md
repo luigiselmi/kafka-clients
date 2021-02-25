@@ -160,7 +160,16 @@ When all the images are available on each node we can deploy the first stack of 
 
     $ docker stack deploy --compose-file docker-compose-fcd-thessaloniki.yml frameworks-stack
 
-We name this stack framework-stack. We can see the services started and in which node have been deployed using the command
+We name this stack framework-stack. We can see the services started and in which node they have been deployed using the command
 
     $ docker stack ps frameworks-stack
 
+After all the architecture's components are up and running and the Elasticsearch index has been created we can open a tab in a browser and point it to the Kibana main page using any of
+the public addresses that are available and the Kibana's defaul port. For example is the public address of one of the EC2 server in our cluster is 3.124.8.48, we can point our browser to 
+the URL http://3.124.8.48:5601 (this example doesn't use the https protocol).
+The last step is to deploy the producer and the Elasticsearch consumer using the 2nd docker-compose file and the command
+
+    $ docker stack deploy --compose-file docker-compose.yml fcd-stack 
+
+With this command the producer and consumer containers will be deployed in a different stack but in the same network as stated in the docker-compose file, so the services will be able to 
+communicate. After some seconds we should be able to see the first data points in Kibana.
