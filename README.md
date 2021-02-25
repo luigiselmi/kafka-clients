@@ -140,6 +140,27 @@ that the swarm master and workers can communicate. We need also a rule to make t
 * UDP port 4789 for overlay network traffic
 * TCP port 5601 Kibana
 
-After the swarm has been created with a manager the workers, we can check that they are available and ready by executing the following command on the manager node
+After the swarm has been created, with a manager and the workers, we can check that they are available and ready by executing the following command on the manager node
 
     $ docker node ls
+
+All the containers in the cluster must be member of an overlay network in order to use a DNS and be able to use the host names instead of their IP addresses. We create the network, e.g.
+kafka-clients-net, from the manager node with the command
+
+    $ docker network create -d overlay --attachable kafka-clients-net 
+
+The services in the docker-compose files all use the same network name so it will be easier to just use it for the test.
+The docker images used in the docker-compose files should be pulled automatically from Docker Hub. The pulling of the images should work in the manager node but it may fail in the worker 
+EC2 nodes on the Amazon cloud. One easy way to bypass this potential problem is to manually pull the required images on each worker node. You may want to remove unused images before starting
+to pull the images for the application using the command
+
+    $ docker rmi $(docker images -a -q)
+
+When all the images are available on each node we can deploy the first stack of services (i.e. Zookeeper, Kafka, Elasticsearch and Kibana) on the swarm using the docker-compose file
+
+    $ docker stack deploy --compose-file docker-compose-fcd-thessaloniki.yml frameworks-stack
+
+We name this stack framework-stack. We can see the services started and in which node have been deployed using the command
+
+    $ docker stack ps frameworks-stack
+
