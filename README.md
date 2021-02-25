@@ -106,7 +106,7 @@ The application consist of a minimum set of 4 Docker containers, one container f
 
 ## Traffic Visualization
 The application uses the floating car data from the taxis as a proxy to monitor the traffic in the city of Thessaloniki. It consists of a certain number of docker containers.
-It can be deployed on a single node, such as a laptop with Docker installed, or in a cluster of nodes, such as EC2 servers on the Amazon cloud. We start with the deployment on a single 
+It can be deployed on a single node, such as a laptop with [Docker Engine](https://docs.docker.com/engine/install/ubuntu/) installed, or in a cluster of nodes, such as EC2 servers on the Amazon cloud. We start with the deployment on a single 
 machine and in the following section is described how to set up a Docker swarm to distribute the containers across different nodes. All the docker images are available on Docker Hub
 so they do not have to be built on the local machine.
 
@@ -129,3 +129,13 @@ the properties of the taxis such as speed, timestamp and geohash.
 ![Kibana Map Visualization](/images/thessaloniki-20210224.png)
 
 ### Deploy to Docker swarm (cluster)
+In order to distribute the containers in more than one node we need to install Docker Engine on each node that wil be part of the cluster. Once we are done with this step we have to choose one
+node as the manager of the cluster while the other will have the role of worker nodes. The Docker engine in the manager node wil have to be switched to swarm mode and the worker will have to 
+join the swarm. How to create a docker swarm is described on the [Docker web site](https://docs.docker.com/engine/swarm/) and it's quite straightforward. The set up described in this section
+has been tested on a small cluster of three EC2 servers on the Amazon cloud. The following protocols and ports (inbound rules) must be allowed in the security group used by the EC2 servers so 
+that the swarm master and workers can communicate. We need also a rule to make the Kibana default port open
+
+* TCP port 2377 for cluster management communications
+* TCP and UDP port 7946 for communication among nodes
+* UDP port 4789 for overlay network traffic
+* TCP port 5601 Kibana
