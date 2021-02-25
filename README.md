@@ -167,12 +167,14 @@ We name this stack framework-stack. We can see the services started and in which
 After all the architecture's components are up and running and the Elasticsearch index has been created we can open a tab in a browser and point it to the Kibana main page using any of
 the public addresses that are available and the Kibana's defaul port. For example is the public address of one of the EC2 server in our cluster is 3.124.8.48, we can point our browser to 
 the URL http://3.124.8.48:5601 (this example doesn't use the https protocol).
-The last step is to deploy the producer and the Elasticsearch consumer using the 2nd docker-compose file and the command
+The last step is to deploy the producer and the Elasticsearch consumer using the 2nd docker-compose file to create another stack, e.g. fcd-stack, and the command
 
     $ docker stack deploy --compose-file docker-compose.yml fcd-stack 
 
 With this command the producer and consumer containers will be deployed in a different stack but in the same network as stated in the docker-compose file, so the services will be able to 
-communicate. After some seconds we should be able to see the first data points in Kibana.
+communicate. After some seconds we should be able to see the first data points in Kibana. To stop all the services use the command
+
+    $ docker stack rm fcd-stack frameworks-stack
 
 ### Troubleshooting
 In case you know some documents have been indexed but you can't visualize the data you may need to clear the cache of the index. From the main menu go to Stack Management and then 
