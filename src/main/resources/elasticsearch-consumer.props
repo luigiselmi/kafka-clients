@@ -1,12 +1,13 @@
 bootstrap.servers=kafka:9092
 client.id=fcd-elasticsearch-consumer
-group.id=taxi-group
-elasticsearch.name=elasticsearch
-elasticsearch.index=thessaloniki
-enable.auto.commit=true
+group.id=fcd-consumer-group
 key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
 value.deserializer=org.apache.kafka.common.serialization.ByteArrayDeserializer
 #value.serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
+
+elasticsearch.name=elasticsearch
+elasticsearch.index=thessaloniki
+enable.auto.commit=true
 
 # fast session timeout makes it more fun to play with failover
 session.timeout.ms=10000

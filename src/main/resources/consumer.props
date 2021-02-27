@@ -1,6 +1,6 @@
 bootstrap.servers=kafka:9092
 client.id=fcd-consumer
-group.id=taxi-group
+group.id=fcd-consumer-group
 
 enable.auto.commit=true
 key.deserializer=org.apache.kafka.common.serialization.StringDeserializer

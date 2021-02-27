@@ -1,5 +1,5 @@
 bootstrap.servers=kafka:9092
-group.id=taxi-group
+group.id=fcd-producer-group
 client.id=fcd-producer
 
 acks=all
