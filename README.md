@@ -90,7 +90,7 @@ log file that can be read from within the container. In order to log into the co
 
 and then execute the command
 
-    # tail -f client.log
+    # tail -f kafka-client.log
 
 
 ### Producer container
