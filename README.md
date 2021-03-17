@@ -194,7 +194,7 @@ need to
 2. partition the data
 3. replicate the partitions
 
-For the example in this section a set of three EC2 instances has been used. 
+For the example in this section a set of three EC2 instances has been used with Docker engine in swarm mode.
 
 #### Zookeeper cluster
 The first component to be distributed is Zookeeper because it's the framework used by 
@@ -202,7 +202,15 @@ Kafka to synchronize its brokers. A docker-compose file to start a Zookeeper clu
 [docker-zookeeper](https://github.com/luigiselmi/docker-zookeeper) repository. Follow the instruction to install the docker-compose file and start the containers.  
 
 #### Kafka cluster
-The 2nd step is to start the Kafka brokers and connect them to one of the Zookeeper servers. 
+The 2nd step is to start the Kafka brokers and connect them to one of the Zookeeper servers. To begin with this step we use only one broker. A docker-compose to be
+used after the one for Zookeeper is available in this repository that will complete the application as in the case of the previous Docker swarm example with the 
+difference that in this example Zookeeper is a cluster of containerized servers.
+
+    $ docker stack deploy --compose-file docker-compose-fcd-thessaloniki-cluster.yml frameworks-stack  
+
+We can test the application using the same command to run the producer and the elasticsearch consumer
+
+    $ docker stack deploy --compose-file docker-compose.yml fcd-stack
 
 ### Troubleshooting
 In case you know some documents have been indexed but you can't visualize the data on Kibana you may need to clear the cache of the index. From the main menu 
