@@ -1,6 +1,7 @@
 bootstrap.servers=kafka:9092
 client.id=fcd-elasticsearch-consumer
 group.id=fcd-consumer-group
+
 key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
 value.deserializer=org.apache.kafka.common.serialization.ByteArrayDeserializer
 #value.serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
@@ -8,6 +9,7 @@ value.deserializer=org.apache.kafka.common.serialization.ByteArrayDeserializer
 elasticsearch.name=elasticsearch
 elasticsearch.index=thessaloniki
 enable.auto.commit=true
+auto.commit.interval.ms=5000
 
 # fast session timeout makes it more fun to play with failover
 session.timeout.ms=10000
