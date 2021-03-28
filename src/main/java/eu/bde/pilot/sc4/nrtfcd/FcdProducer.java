@@ -105,7 +105,7 @@ public class FcdProducer {
     }
     finally {
        producer.close();
-        log.fatal("The producer has benn closed.");       
+        log.fatal("The producer has been closed.");       
     }
 
   }
