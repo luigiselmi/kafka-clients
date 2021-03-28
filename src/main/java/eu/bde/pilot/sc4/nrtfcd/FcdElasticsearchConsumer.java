@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Properties;
-
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
@@ -25,9 +24,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-
 import com.google.common.io.Resources;
-
 import eu.bde.pilot.sc4.nrtfcd.utils.Geohash;
 
 public class FcdElasticsearchConsumer {
@@ -45,19 +42,19 @@ public class FcdElasticsearchConsumer {
 	    
     // Set up the consumer
     KafkaConsumer<String, byte []> consumer;
-    String elasticsearchHostName = null;
+    String elasticsearchHosts = null;
     String elasticsearchIndex = null;
     try (InputStream props = Resources.getResource("elasticsearch-consumer.props").openStream()) {
         Properties properties = new Properties();
         properties.load(props);
         consumer = new KafkaConsumer<>(properties);
         
-        elasticsearchHostName = properties.getProperty("elasticsearch.name");
-        if (elasticsearchHostName == null)
-          elasticsearchHostName = "localhost";
+        elasticsearchHosts = properties.getProperty("elasticsearch.hosts");
+        if (elasticsearchHosts == null)
+          elasticsearchHosts = "localhost";
         
         elasticsearchIndex = properties.getProperty("elasticsearch.index");
-        log.info("Elasticsearch host name: " + elasticsearchHostName);
+        log.info("Elasticsearch hosts: " + elasticsearchHosts);
     }
     
     consumer.subscribe(Arrays.asList(topic));
@@ -71,10 +68,11 @@ public class FcdElasticsearchConsumer {
     //Injection<GenericRecord, byte[]> recordInjection = GenericAvroCodecs.toBinary(schema);
     GenericDatumReader<GenericRecord> datumReader = new GenericDatumReader<GenericRecord>(schema);
     
+    // Connects to a single node Elasticsearch
+    HttpHost [] esHosts = getElasticsearchNodes(elasticsearchHosts);
     RestHighLevelClient elasticsearchClient = new RestHighLevelClient(
-        RestClient.builder(
-                new HttpHost(elasticsearchHostName, 9200, "http"),
-                new HttpHost(elasticsearchHostName, 9201, "http")));
+        RestClient.builder(esHosts)
+    );
     
     try {
       int timeouts = 0;
@@ -130,7 +128,7 @@ public class FcdElasticsearchConsumer {
             	"}";
             indexRequest.source(json, XContentType.JSON);
             Cancellable indexResponse = elasticsearchClient.indexAsync(indexRequest, RequestOptions.DEFAULT, listener);
-            log.debug("New record:\n" + json);
+            log.debug("New record:\n" + json + "\n" + indexResponse + "\n");
           }
           else {
             throw new IllegalStateException("Shouldn't be possible to get message on topic " + record.topic());
@@ -147,5 +145,21 @@ public class FcdElasticsearchConsumer {
       consumer.close();  
       log.info("Closed connection to the Kafka topic and to Elasticsearch.");
     }
+	}
+	// Returns the Elasticsearch nodes names and ports configured
+	// in the properties file
+	public static HttpHost [] getElasticsearchNodes(String esHosts) {
+	  String [] esHostsProperty = esHosts.split(",");
+	  int numberOfhosts = esHostsProperty.length;
+	  HttpHost [] esHostArray = new HttpHost[numberOfhosts];
+	  int hostCounter = 0;
+	  for (String hostNamePort: esHostsProperty) {
+	    String hostName = hostNamePort.split(":")[0];
+	    int port = Integer.parseInt(hostNamePort.split(":")[1]);
+	    HttpHost host = new HttpHost(hostName, port, "http");
+	    esHostArray[hostCounter] = host;
+	    hostCounter++;
+	  }
+	  return esHostArray;
 	}
 }
