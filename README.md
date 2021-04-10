@@ -186,7 +186,7 @@ the services will be able to communicate. After some seconds we should be able t
 
     $ docker stack rm fcd-stack frameworks-stack
 
-### Zookeeper and Kafka Cluster Configuration (to be completed)
+### Zookeeper, Kafka and Elasticsearch clusters Configuration
 A deployment with Zookeeper and Kafka in single node is useful to test the application but in order to scale the aplication and set it up as a reliable one we
 need to 
 
@@ -211,6 +211,8 @@ difference that in this example Zookeeper is a cluster of containerized servers.
 We can test the application using the same command to run the producer and the elasticsearch consumer
 
     $ docker stack deploy --compose-file docker-compose.yml fcd-stack
+
+#### Elasticsearch cluster
 
 ### Troubleshooting
 In case you know some documents have been indexed but you can't visualize the data on Kibana you may need to clear the cache of the index. From the main menu 
