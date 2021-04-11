@@ -202,8 +202,8 @@ and connect them to the Zookeeper servers. A docker-compose file to start both Z
 [Kafka cluster](https://github.com/luigiselmi/docker-kafka#kafka-cluster) section of the docker-kafka repository.
 
 #### Elasticsearch cluster
-We can start a cluster of three Elasticsearch server following the instructions in the cluster section of the [README.md](https://github.com/luigiselmi/docker-elasticsearch#cluster) 
-file in the docker-elasticsearch repository.
+We can start a cluster of three Elasticsearch servers and one Kibana server following the instructions in the cluster section of the 
+[README.md](https://github.com/luigiselmi/docker-elasticsearch#cluster) file in the docker-elasticsearch repository.
 
 #### Producer and consumer
 We can test the application using the same command to run the producer and the elasticsearch consumer
