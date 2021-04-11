@@ -187,32 +187,28 @@ the services will be able to communicate. After some seconds we should be able t
     $ docker stack rm fcd-stack frameworks-stack
 
 ### Zookeeper, Kafka and Elasticsearch clusters Configuration
-A deployment with Zookeeper and Kafka in single node is useful to test the application but in order to scale the aplication and set it up as a reliable one we
-need to 
+A deployment with Zookeeper, Kafka and Elasticsearch in single node is useful for development and test the application but in order to scale the aplication and 
+set it up as a reliable one we need to 
 
 1. replicate the services, 
-2. partition the data
+2. partition and distribute the data
 3. replicate the partitions
 
 For the example in this section a set of three EC2 instances has been used with Docker engine in swarm mode.
 
-#### Zookeeper cluster
-The first component to be distributed is Zookeeper because it's the framework used by 
-Kafka to synchronize its brokers. A docker-compose file to start a Zookeeper cluster using three Docker containers is available on the 
-[docker-zookeeper](https://github.com/luigiselmi/docker-zookeeper) repository. Follow the instruction to install the docker-compose file and start the containers.  
+#### Zookeeper and Kafka clusters
+The first component to be distributed is Zookeeper because it's the framework used by  Kafka to synchronize its brokers. The 2nd step is to start the Kafka brokers 
+and connect them to the Zookeeper servers. A docker-compose file to start both Zookeeper and Kafka clusters is available in the 
+[Kafka cluster](https://github.com/luigiselmi/docker-kafka#kafka-cluster) section of the docker-kafka repository.
 
-#### Kafka cluster
-The 2nd step is to start the Kafka brokers and connect them to one of the Zookeeper servers. To begin with this step we use only one broker. A docker-compose to be
-used after the one for Zookeeper is available in this repository that will complete the application as in the case of the previous Docker swarm example with the 
-difference that in this example Zookeeper is a cluster of containerized servers.
+#### Elasticsearch cluster
+We can start a cluster of three Elasticsearch server following the instructions in the cluster section of the [README.md](https://github.com/luigiselmi/docker-elasticsearch#cluster) 
+file in the docker-elasticsearch repository.
 
-    $ docker stack deploy --compose-file docker-compose-fcd-thessaloniki-cluster.yml frameworks-stack  
-
+#### Producer and consumer
 We can test the application using the same command to run the producer and the elasticsearch consumer
 
     $ docker stack deploy --compose-file docker-compose.yml fcd-stack
-
-#### Elasticsearch cluster
 
 ### Troubleshooting
 In case you know some documents have been indexed but you can't visualize the data on Kibana you may need to clear the cache of the index. From the main menu 
