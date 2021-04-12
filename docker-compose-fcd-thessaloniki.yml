@@ -1,8 +1,8 @@
 version: '3.2'
 services:
-    zookeeper:
+    zoo1:
         image: lgslm/zookeeper:v1.0.0
-        hostname: zookeeper
+        hostname: zoo1
         environment:
             - MYID=1
         expose:
@@ -16,11 +16,11 @@ services:
         image: lgslm/kafka:v1.0.0
         hostname: kafka1
         environment:
-            - SERVICE_PRECONDITION=zookeeper:2181
-            - ZOOKEEPER_SERVERS=zookeeper:2181
+            - SERVICE_PRECONDITION=zoo1:2181
+            - ZOOKEEPER_SERVERS=zoo1:2181
             - TOPIC=taxi
         depends_on:
-            - zookeeper
+            - zoo1
         expose:
             - "9092"
         networks:
