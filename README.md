@@ -187,8 +187,8 @@ the services will be able to communicate. After some seconds we should be able t
     $ docker stack rm fcd-stack frameworks-stack
 
 ### Zookeeper, Kafka and Elasticsearch clusters configuration
-A deployment with Zookeeper, Kafka and Elasticsearch in single node is useful for development and test the application but in order to scale the aplication and 
-set it up as a reliable one we need to 
+A deployment with Zookeeper, Kafka and Elasticsearch in single node is useful for development and test an application but in order to scale and set it up as a 
+reliable application we need to 
 
 1. replicate the services, 
 2. partition and distribute the data
