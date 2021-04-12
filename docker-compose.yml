@@ -6,7 +6,7 @@ services:
         hostname: fcd-producer
         restart: unless-stopped
         environment:
-            - ZOOKEEPER_SERVERS=zookeeper:2181 
+            - ZOOKEEPER_SERVERS=zoo1:2181 
             - KAFKA_CLIENT_TYPE=producer
             - TOPIC=taxi
         networks:
@@ -17,7 +17,7 @@ services:
         hostname: fcd-consumer
         restart: unless-stopped
         environment:
-            - ZOOKEEPER_SERVERS=zookeeper:2181
+            - ZOOKEEPER_SERVERS=zoo1:2181
             - KAFKA_CLIENT_TYPE=consumer-elasticsearch
             - TOPIC=taxi
         depends_on:
