@@ -186,7 +186,7 @@ the services will be able to communicate. After some seconds we should be able t
 
     $ docker stack rm fcd-stack frameworks-stack
 
-### Zookeeper, Kafka and Elasticsearch clusters Configuration
+### Zookeeper, Kafka and Elasticsearch clusters configuration
 A deployment with Zookeeper, Kafka and Elasticsearch in single node is useful for development and test the application but in order to scale the aplication and 
 set it up as a reliable one we need to 
 
@@ -202,14 +202,15 @@ and connect them to the Zookeeper servers. A docker-compose file to start both Z
 [Kafka cluster](https://github.com/luigiselmi/docker-kafka#kafka-cluster) section of the docker-kafka repository.
 
 #### Elasticsearch cluster
-We can start a cluster of three Elasticsearch servers and one Kibana server following the instructions in the cluster section of the 
-[README.md](https://github.com/luigiselmi/docker-elasticsearch#cluster) file in the docker-elasticsearch repository.
+We can start a cluster of three Elasticsearch servers and one Kibana server following the instructions in the 
+[cluster](https://github.com/luigiselmi/docker-elasticsearch#cluster) section of the docker-elasticsearch repository.
 
 #### Producer and consumer
-We can test the application using the same command to run the producer and the elasticsearch consumer
+We can test the application using the same docker-compose file used in the previous examples to run the producer and the elasticsearch consumer
 
     $ docker stack deploy --compose-file docker-compose.yml fcd-stack
 
+The application is deployed as three stacks and 12 containers.
 ### Troubleshooting
 In case you know some documents have been indexed but you can't visualize the data on Kibana you may need to clear the cache of the index. From the main menu 
 go to Stack Management and then Index Management, select the index "thessaloniki", and from the "Manage" button click "Clear index cache".
