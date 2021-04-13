@@ -4,7 +4,12 @@ import java.io.IOException;
 
 /**
  * Pick whether we want to run as producer or consumer. This lets us
- * have a single executable as a build target.
+ * have a single executable as a build target. The Main class requires
+ * two arguments:
+ * 0) the client type
+ * 1) the Kafka topic
+ * 2) if the client is a producer the 3rd argument is the URL of the 
+ *    web service that provides the taxi floating car data 
  */
 public class Main {
     public static void main(String[] args) throws IOException {

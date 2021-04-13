@@ -1,4 +1,5 @@
-bootstrap.servers=kafka1:9092,kafka2:9092,kafka3:9092
+bootstrap.servers=kafka1:9092
+#bootstrap.servers=kafka1:9092,kafka2:9092,kafka3:9092
 client.id=fcd-elasticsearch-consumer
 group.id=fcd-consumer-group
 
@@ -6,7 +7,8 @@ key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
 value.deserializer=org.apache.kafka.common.serialization.ByteArrayDeserializer
 #value.serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
 
-elasticsearch.name=elasticsearch
+elasticsearch.hosts=es01:9200
+#elasticsearch.hosts=es01:9200,es02:9200,es03:9200
 elasticsearch.index=thessaloniki
 enable.auto.commit=true
 auto.commit.interval.ms=5000

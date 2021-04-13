@@ -37,7 +37,6 @@ public class FcdProducer {
   private static String sourceUrl = null;
   public static final String FCD_THESSALONIKI_SCHEMA = "fcd-record-schema.avsc";
   public static final int DELAY_BETWEEN_REQUESTS_SEC = 30;
-  //private static final Logger log = LoggerFactory.getLogger(FcdProducer.class);
   private static final Logger log = LogManager.getLogger(FcdProducer.class);
   
   private static transient DateTimeFormatter timeFormatter =
@@ -150,7 +149,7 @@ public class FcdProducer {
 	}
 	
 	/**
-	 * Parse a string of json data and create a list of record strings
+	 * Parses a string of json data and creates a list of record strings
 	 * @param jsonString
 	 * @return
 	 */
